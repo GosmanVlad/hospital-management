@@ -20,4 +20,6 @@ public class RegisterRequest {
     @Size(min = 5, max = 255)
     @Email(message = "Customer email should be valid")
     private String email;
+    private String username;
+    private String role;
 }

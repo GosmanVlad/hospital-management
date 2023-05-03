@@ -22,6 +22,7 @@ public class User {
     private String createdBy;
     private String modifiedBy;
     private String password;
+    private String role;
 
     @Column(unique = true)
     private String username;

@@ -2,6 +2,7 @@ package com.hospital.management.config;
 
 import com.hospital.management.service.implementation.UserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,19 +15,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.apache.commons.lang3.StringUtils;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final UserDetailsServiceImpl jwtUserDetailsService;
-    private final JwtToken jwtToken;
+    private final JwtToken jwtTokenUtil;
 
-    public JwtRequestFilter(UserDetailsServiceImpl jwtUserDetailsService, JwtToken jwtToken) {
+    public JwtRequestFilter(UserDetailsServiceImpl jwtUserDetailsService, JwtToken jwtTokenUtil) {
         this.jwtUserDetailsService = jwtUserDetailsService;
-        this.jwtToken = jwtToken;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -34,13 +33,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader("Authorization");
         if (StringUtils.startsWith(requestTokenHeader,"Bearer ")) {
-            String token = requestTokenHeader.substring(7);
+            String jwtToken = requestTokenHeader.substring(7);
             try {
-                String username = jwtToken.getUsernameFromToken(token);
+                String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
                 if (StringUtils.isNotEmpty(username)
                         && null == SecurityContextHolder.getContext().getAuthentication()) {
                     UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
-                    if (jwtToken.validateToken(token, userDetails)) {
+                    if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                                 new UsernamePasswordAuthenticationToken(
                                         userDetails, null, userDetails.getAuthorities());
@@ -62,4 +61,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
 }
