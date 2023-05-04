@@ -1,0 +1,13 @@
+.v-toolbar__content,
+.v-toolbar__extension {
+  background-color: #9d152d;
+}
+
+.v-navigation-drawer__content {
+  background-color: #c9c9c9;
+}
+
+.header-title {
+  font-size: 25px;
+  color: white;
+}

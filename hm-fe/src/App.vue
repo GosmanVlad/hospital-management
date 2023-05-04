@@ -1,26 +1,32 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <v-layout ref="app">
+    <Navbar />
+    <Sidebar />
+
+    <v-main>
+      <v-card height="200px"></v-card>
+    </v-main>
+  </v-layout>
 </template>
 
+<style scoped>
+@import './assets/css/main.css';
+</style>
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navbar from "./components/Navbar.vue";
+import Sidebar from "./components/Sidebar.vue";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  components: { Navbar, Sidebar },
+  data: () => ({
+    layout: null,
+  }),
+  methods: {
+    print(key) {
+      alert(JSON.stringify(this.$refs.app.getLayoutItem(key), null, 2))
+    },
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
