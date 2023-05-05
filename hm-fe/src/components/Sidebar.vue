@@ -1,18 +1,24 @@
 <template>
-    <v-navigation-drawer color="grey-darken-2" permanent name="drawer">
-        <v-list class="main-nav-container">
-            <div>
-                <div>
-                    <v-list-item v-bind="props"><router-link :to="'/'" class="router-link-path">
-                            Menu 1
-                        </router-link></v-list-item>
-                    <v-list-item v-bind="props"><router-link :to="'/'" class="router-link-path">
-                            Menu 2
-                        </router-link></v-list-item>
-                    <v-list-item v-bind="props"><router-link :to="'/'" class="router-link-path">
-                            Menu 3
-                        </router-link></v-list-item>
-                </div>
+    <v-navigation-drawer class="navigation-drawer-main mt-5" color="#f5f5f5" permanent width="280" border="none"
+        elevation="5" max-height="max-content" :rail="rail" @click="rail = false">
+        <v-list-item class="align-left">
+            <v-icon v-if="rail">mdi-menu-right</v-icon>
+            <template v-slot:append>
+                <v-btn v-if="!rail" variant="text" icon="mdi-menu-left" @click.stop="switchRail()"></v-btn>
+            </template>
+        </v-list-item>
+        <v-divider v-if="!rail"></v-divider>
+        <v-list v-if="!rail" class="main-nav-container">
+            <div v-if="!rail">
+                <v-list-item><router-link :to="'/'" class="router-link-path">
+                        Menu 1
+                    </router-link></v-list-item>
+                <v-list-item><router-link :to="'/'" class="router-link-path">
+                        Menu 2
+                    </router-link></v-list-item>
+                <v-list-item><router-link :to="'/'" class="router-link-path">
+                        Menu 3
+                    </router-link></v-list-item>
             </div>
         </v-list>
     </v-navigation-drawer>
@@ -20,9 +26,16 @@
 <script>
 export default {
     name: 'SideBar',
-    date() {
+    data() {
         return {
             props: "",
+            rail: true,
+        }
+    },
+    methods: {
+        switchRail() {
+            this.rail = !this.rail;
+            console.log(this.rail);
         }
     }
 }

@@ -1,1 +1,1 @@
-export const appName = 'Import POSF';
+export const appName = 'Hospital Manager';

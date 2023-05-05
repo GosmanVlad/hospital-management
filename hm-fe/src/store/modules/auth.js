@@ -1,29 +1,28 @@
 import axios from "axios";
 
 const apiUrl = process.env.VUE_APP_API_URL;
-const headers = {
-    "Content-Type": "application/xml",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-};
+
 const state = {
     user: null,
     token: null,
     role: null,
+    activated: false,
+    userId: null
 };
 const getters = {
     StateRole: (state) => state.role,
     isAuthenticated: (state) => !!state.user,
     StateUser: (state) => state.user,
-    StateToken: (state) => state.token
+    StateToken: (state) => state.token,
+    StateUserId: (state) => state.userId,
+    StateActivated: (state) => state.activated
 };
 const actions = {
     async Register({ dispatch }, form) {
-        const response = await axios.post(`${apiUrl}/auth/register`, form, { headers });
+        const response = await axios.post(`${apiUrl}/auth/register`, form);
         if (response.data.status === "success") {
             let UserForm = new FormData();
-            UserForm.append("username", form.username);
+            UserForm.append("email", form.email);
             UserForm.append("password", form.password);
             UserForm.append("role", form.role);
             await dispatch("LogIn", UserForm);
@@ -37,6 +36,8 @@ const actions = {
             await commit("setUser", response.data?.username || {});
             await commit("setRole", response.data?.role || "");
             await commit("setToken", response.data.token);
+            await commit("setActivated", response.data.activated);
+            await commit("setUserId", response.data.user_id);
         }
         return response;
     },
@@ -53,6 +54,12 @@ const mutations = {
     },
     setRole(state, role) {
         state.role = role;
+    },
+    setUserId(state, userId) {
+        state.userId = userId;
+    },
+    setActivated(state, activated) {
+        state.activated = activated;
     },
     setToken(state, token) {
         state.token = token;

@@ -2,6 +2,7 @@ package com.hospital.management.controller;
 
 import com.hospital.management.config.JwtToken;
 import com.hospital.management.model.User;
+import com.hospital.management.model.dto.auth.ChangePasswordRequest;
 import com.hospital.management.model.dto.auth.LoginRequest;
 import com.hospital.management.model.dto.auth.RegisterRequest;
 import com.hospital.management.service.implementation.UserDetailsServiceImpl;
@@ -77,6 +78,7 @@ public class AuthentificationController {
             responseMap.put("error", false);
             responseMap.put("message", "logged_in");
             responseMap.put("token", token);
+            responseMap.put("activated", user.isActivated());
             return ResponseEntity.ok(responseMap.toString());
         }catch (Exception exception) {
             exception.printStackTrace();
@@ -94,7 +96,7 @@ public class AuthentificationController {
         User user = new User();
 
         try {
-            user.setUsername(request.getUsername());
+            user.setUsername(request.getFirstName() + "_" + request.getLastName());
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
@@ -107,7 +109,7 @@ public class AuthentificationController {
             String token = jwtTokenUtil.generateToken(userDetails);
 
             responseMap.put("error", false);
-            responseMap.put("username", user.getUsername());
+            responseMap.put("email", user.getEmail());
             responseMap.put("message", "account_created_successfully");
             responseMap.put("token", token);
             return ResponseEntity.ok(responseMap);
@@ -115,6 +117,30 @@ public class AuthentificationController {
             responseMap.put("error", exception.getMessage());
             responseMap.put("message", "internal_error");
             responseMap.put("error_message", exception.getMessage());
+            return ResponseEntity.status(500).body(responseMap.toString());
+        }
+    }
+
+    @PutMapping("/change-password/{userId}")
+    public ResponseEntity<?> changePassword(@PathVariable(value = "userId") Long userId,
+                                            @RequestBody ChangePasswordRequest request) {
+        Date currentDate = new Date();
+        Map<String, Object> responseMap = new HashMap<>();
+        User user = userService.findByUserId(userId);
+
+        if (request.getPassword().equals(request.getRepeatPassword())) {
+            user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
+            user.setActivated(true);
+            user.setModifiedDate(currentDate);
+
+            userService.save(user);
+
+            responseMap.put("error", false);
+            responseMap.put("message", "reset_password_success");
+            return ResponseEntity.ok(responseMap);
+        } else {
+            responseMap.put("error", true);
+            responseMap.put("message", "password_does_not_match");
             return ResponseEntity.status(500).body(responseMap.toString());
         }
     }

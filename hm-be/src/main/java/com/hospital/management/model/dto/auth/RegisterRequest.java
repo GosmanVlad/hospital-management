@@ -9,10 +9,8 @@ import javax.validation.constraints.Size;
 @Data
 public class RegisterRequest {
     @NotEmpty
-    @Size(min = 2, max = 75)
     private String firstName;
     @NotEmpty
-    @Size(min = 2, max = 75)
     private String lastName;
     @Size(min = 2, max = 75)
     private String password;
@@ -20,6 +18,5 @@ public class RegisterRequest {
     @Size(min = 5, max = 255)
     @Email(message = "Customer email should be valid")
     private String email;
-    private String username;
     private String role;
 }

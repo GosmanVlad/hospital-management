@@ -1,26 +1,20 @@
 <template>
-    <v-form v-model="valid">
-        <v-container fill-height fluid>
-            <v-row justify="center">
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.email" label="Email" required></v-text-field>
-                </v-col>
+    <div class="d-flex align-center justify-center" style="height: 80vh">
+        <div class="login-form">
+            <h1 class="d-flex align-center justify-center auth-title">Autentificare platforma</h1> <br />
+            <v-divider /><br />
+            <v-sheet width="400" class="mx-auto">
+                <v-text-field variant="underlined" v-model="form.email" label="Email"></v-text-field>
+                <v-text-field variant="underlined" v-model="form.password" label="Parola"></v-text-field>
+                <div class="auth-footer-section">
+                    <a href="#" class="text-body-2 font-weight-regular" style="color: #9d152d">Forgot Password?</a>
 
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.password" label="password" required type="password"></v-text-field>
-                </v-col>
-            </v-row>
-
-            <v-card-actions class="justify-center">
-                <v-btn>
-                    <v-btn @click.prevent="login" rounded="lg" color="primary">Login</v-btn>
-                </v-btn>
-                <v-btn>
-                    <v-btn @click="join" rounded="lg" color="primary" hidden>Join</v-btn>
-                </v-btn>
-            </v-card-actions>
-        </v-container>
-    </v-form>
+                    <v-btn type="submit" variant="outlined" color="error" block class="mt-2"
+                        @click.prevent="login">Autentificare</v-btn>
+                </div>
+            </v-sheet>
+        </div>
+    </div>
     <v-snackbar v-model="snackbar.show" :color="snackbar.color">
         <v-icon v-if="snackbar.status === 'warning'" style="margin-right:10px">mdi-alert</v-icon>
         <v-icon v-if="snackbar.status === 'error'" style="margin-right:10px">mdi-alert-circle-outline</v-icon>
@@ -65,7 +59,12 @@ export default {
                     }
                     this.response = res;
                     localStorage.setItem("role", res.data.role);
-                    this.$router.push("/");
+
+                    if (!res.data.activated) {
+                        this.$router.push("/activation");
+                    } else {
+                        this.$router.push("/");
+                    }
                 }).catch(() => {
                     this.snackbar = {
                         show: true,
@@ -85,3 +84,9 @@ export default {
     }
 }
 </script>
+<style scoped>
+.auth-footer-section {
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+</style>

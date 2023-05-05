@@ -1,27 +1,20 @@
 <template>
-    <v-form v-model="valid">
-        <v-container>
-            <v-row>
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.username" label="Username" required></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.password" label="password" required type="password"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="4">
-                    <v-select label="Select" v-model="form.role" :items="['CEZV-EE', 'CEZV-GN', 'DEO', 'ADMIN']"></v-select>
-                </v-col>
-            </v-row>
-
-            <v-card-actions class="justify-center">
-                <v-btn>
-                    <v-btn @click.prevent="register" rounded="lg" color="primary">Register</v-btn>
-                </v-btn>
-            </v-card-actions>
-        </v-container>
-    </v-form>
+    <div class="d-flex align-center justify-center" style="height: 80vh">
+        <div class="login-form">
+            <h1 class="d-flex align-center justify-center auth-title">Inregistrare in platforma</h1> <br />
+            <v-divider /><br />
+            <v-sheet width="400" class="mx-auto">
+                <v-text-field variant="underlined" v-model="form.firstName" label="Nume"></v-text-field>
+                <v-text-field variant="underlined" v-model="form.lastName" label="Prenume"></v-text-field>
+                <v-text-field variant="underlined" v-model="form.email" label="Email"></v-text-field>
+                <v-select label="Select" v-model="form.role" :items="['NURSE', 'DOCTOR', 'PATIENT']"></v-select>
+                <div class="auth-footer-section">
+                    <v-btn type="submit" variant="outlined" color="error" block class="mt-2"
+                        @click.prevent="register">Inregistrare</v-btn>
+                </div>
+            </v-sheet>
+        </div>
+    </div>
 </template>
 <script>
 import { mapActions } from "vuex";
@@ -30,9 +23,11 @@ export default {
     data: () => ({
         valid: false,
         form: {
-            username: "",
-            password: "",
-            role: "CEZV-EE"
+            firstName: "",
+            lastName: "",
+            email: "",
+            role: "NURSE",
+            password: "gsmvlad"
         },
     }),
     methods: {
@@ -48,3 +43,9 @@ export default {
     }
 }
 </script>
+<style scoped>
+.auth-footer-section {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+</style>

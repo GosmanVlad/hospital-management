@@ -23,6 +23,7 @@ public class User {
     private String modifiedBy;
     private String password;
     private String role;
+    private boolean activated;
 
     @Column(unique = true)
     private String username;
