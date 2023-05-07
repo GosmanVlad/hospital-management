@@ -9,7 +9,9 @@ const headers = {
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const appointmentService = {
-    getAppointments
+    getAppointments,
+    saveAppointment,
+    changeAppointmentStatus
 };
 
 function getAppointments(filters, pagination) {
@@ -27,4 +29,15 @@ function getAppointments(filters, pagination) {
     };
 
     return axios.get(`${apiUrl}/appointments/${pagFilters}`, params, { headers });
+}
+
+
+function saveAppointment(body) {
+
+    return axios.post(`${apiUrl}/appointments`, body, { headers });
+}
+
+function changeAppointmentStatus(appointmentId, status) {
+
+    return axios.put(`${apiUrl}/appointments/${appointmentId}/${status}`, { headers });
 }

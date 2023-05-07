@@ -12,5 +12,7 @@ public class AppointmentOutcomingDto {
     private String details;
     private String status;
     private Long employeeId;
+    private String employeeName;
+    private String departmentName;
     private Long userId;
 }

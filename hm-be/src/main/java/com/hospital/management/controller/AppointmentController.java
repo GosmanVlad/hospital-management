@@ -63,4 +63,20 @@ public class AppointmentController {
             return ResponseEntity.internalServerError().body(responseMap);
         }
     }
+
+    @PutMapping("/{appointmentId}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable(value = "appointmentId") Long appointmentId,
+                                          @PathVariable(value = "status") String status) {
+        Map<String, Object> responseMap;
+
+        try {
+            appointmentService.changeAppointmentStatus(appointmentId, status);
+
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", null);
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.getMessage());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
 }

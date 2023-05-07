@@ -1,15 +1,13 @@
 package com.hospital.management.service.implementation;
 
 import com.hospital.management.constant.AppointmentStatus;
-import com.hospital.management.model.Appointment;
-import com.hospital.management.model.Appointment_;
-import com.hospital.management.model.Department;
-import com.hospital.management.model.User;
+import com.hospital.management.model.*;
 import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.model.dto.appointment.AppointmentParams;
 import com.hospital.management.model.dto.appointment.AppointmentRequest;
 import com.hospital.management.repository.AppointmentRepository;
 import com.hospital.management.repository.DepartmentRepository;
+import com.hospital.management.repository.EmployeeRepository;
 import com.hospital.management.repository.UserRepository;
 import com.hospital.management.service.util.AppointmentServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
@@ -34,14 +32,18 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
     UserRepository userRepository;
 
     @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
     AppointmentRepository appointmentRepository;
 
     @Override
     public void add(AppointmentRequest appointmentRequest) {
         Department department = departmentRepository.findByDepartmentId(appointmentRequest.getDepartmentId());
         User patient = userRepository.findByUserId(appointmentRequest.getPatientId());
+        Employee doctor = employeeRepository.findByEmployeeId(appointmentRequest.getEmployeeId());
 
-        if(department != null && patient != null) {
+        if(department != null && patient != null && doctor != null) {
             Appointment appointment = new Appointment();
 
             appointment.setDetails(appointmentRequest.getDetails());
@@ -49,7 +51,7 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
             appointment.setDepartment(department);
             appointment.setUser(patient);
             appointment.setStatus(AppointmentStatus.PENDING);
-            appointment.setEmployee(null);
+            appointment.setEmployee(doctor);
             appointmentRepository.save(appointment);
 
         }
@@ -101,6 +103,21 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
         propertyMapper.addMappings(
                 mapper -> mapper.map(src -> src.getEmployee().getEmployeeId(), AppointmentOutcomingDto::setEmployeeId)
         );
+
+        // Map department
+        propertyMapper.addMappings(
+                mapper -> mapper.map(src -> src.getDepartment().getDepartmentName(), AppointmentOutcomingDto::setDepartmentName)
+        );
+
+        // Map department
+        propertyMapper.addMappings(
+                mapper -> mapper.map(src -> src.getEmployee().getUser().getUsername(), AppointmentOutcomingDto::setEmployeeName)
+        );
         return ResponseUtils.mapEntityListToDtoList(modelMapper, appointments, appointmentOutcomingDtoClass);
+    }
+
+    @Override
+    public void changeAppointmentStatus(Long appointmentId, String status) {
+        appointmentRepository.changeAppointmentStatus(appointmentId, status);
     }
 }

@@ -15,4 +15,6 @@ public interface AppointmentServiceUtil {
     Page<Appointment> findByFilter(AppointmentParams appointmentParams, Pageable pageable);
 
     List<?> mapEntityListToDtoList(Page<Appointment> appointments, Class<AppointmentOutcomingDto> appointmentOutcomingDtoClass);
+
+    void changeAppointmentStatus(Long appointmentId, String status);
 }

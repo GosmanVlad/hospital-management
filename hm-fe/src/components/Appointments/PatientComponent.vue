@@ -15,19 +15,28 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <Datepicker></Datepicker>
+                                <Datepicker required autoApply valueType="format" enableTimePicker="true" id="startDate"
+                                    v-model="this.saveAppointmentBody.selectedDate">
+                                </Datepicker>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
+                                <v-select :items="this.departments" item-title="departmentName" item-value="departmentId"
+                                    variant="underlined" v-model="this.saveAppointmentBody.selectedDepartment"
+                                    ref="department" placeholder="Sectie" label="Selecteaza sectie"
+                                    @update:modelValue="getEmployeeByDepartmentId()">
+                                </v-select>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete
-                                    :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                                    label="Interests" multiple></v-autocomplete>
+                                <v-select :items="this.employees"
+                                    :item-title="(value) => value.user.firstName + ' ' + value.user.lastName"
+                                    item-value="employeeId" variant="underlined"
+                                    v-model="this.saveAppointmentBody.selectedEmployee" ref="doctor" placeholder="Doctor"
+                                    label="Selecteaza doctor">
+                                </v-select>
                             </v-col>
 
                             <v-col cols="12">
-                                <v-text-field label="Detalii"></v-text-field>
+                                <v-text-field label="Detalii" v-model="this.saveAppointmentBody.details"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -38,7 +47,7 @@
                     <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
                         Close
                     </v-btn>
-                    <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                    <v-btn color="blue-darken-1" variant="text" @click="saveAppointment()">
                         Save
                     </v-btn>
                 </v-card-actions>
@@ -52,14 +61,40 @@
                     Numar programare
                 </th>
                 <th class="text-left">
+                    Sectie
+                </th>
+                <th class="text-left">
+                    Doctor
+                </th>
+                <th class="text-left">
+                    Data
+                </th>
+                <th class="text-left">
                     Status
+                </th>
+                <th class="text-left">
+                    Actiuni
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="item in tableData?.content" :key="item.appointmentId" class="table-rows">
                 <td>{{ item.appointmentId }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.departmentName }}</td>
+                <td>{{ item.employeeName }}</td>
+                <td>{{ formatDateWithHour(item.date) }}</td>
+                <td><v-chip class="ma-2" :color="getStatusColour(item.status)" text-color="white">
+                        {{ getStatusLabel(item.status) }}
+                    </v-chip></td>
+                <td>
+                    <div class="one-line">
+                        <span class="group pa-2 cursor" @click="cancelAppointment(item.appointmentId)"
+                            v-if="item.status === 'pending'">
+                            <v-tooltip activator="parent" location="top">Anuleaza programarea</v-tooltip>
+                            <v-icon>mdi-cancel</v-icon>
+                        </span>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </v-table>
@@ -70,6 +105,10 @@
 </template>
 <script>
 import { appointmentService } from '@/api';
+import { departmentService } from '@/api';
+import { employeeService } from '@/api';
+import { appointmentStatus } from "@/consts/statuses";
+import moment from "moment";
 
 export default {
     name: "PatientComponent",
@@ -87,20 +126,92 @@ export default {
             departmentId: null,
             status: ""
         },
+        saveAppointmentBody: {
+            selectedDepartment: undefined,
+            selectedEmployee: undefined,
+            selectedDate: moment(),
+            details: ""
+        },
         dialog: false,
+        departments: [],
+        employees: [],
+        statuses: appointmentStatus
     }),
     mounted() {
-        this.filters.userId = this.$store.getters.StateUserId;
-        appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
-            this.tableData = res.data.result;
-            this.pagination.totalPages = res.data.totalPages;
-            this.pagination.totalElements = res.data.totalElements;
-        })
+        this.getAppointments();
+        this.getDepartments();
+    },
+    methods: {
+        getAppointments() {
+            this.filters.userId = this.$store.getters.StateUserId;
+            appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
+                this.tableData = res.data.result;
+                this.pagination.totalPages = res.data.totalPages;
+                this.pagination.totalElements = res.data.totalElements;
+            })
+        },
+        getDepartments() {
+            departmentService.getDepartments().then((res) => {
+                this.departments = res.data.result;
+            })
+        },
+        getEmployeeByDepartmentId() {
+            employeeService.getEmployeeByDepartmentId(this.saveAppointmentBody.selectedDepartment).then((res) => {
+                this.employees = res.data.result;
+            })
+        },
+        saveAppointment() {
+            this.dialog = false;
+
+            const body = {
+                details: this.saveAppointmentBody.details,
+                date: moment(this.saveAppointmentBody.selectedDate).format("yyyy-MM-DD[T]HH:mm"),
+                departmentId: this.saveAppointmentBody.selectedDepartment,
+                patientId: this.$store.getters.StateUserId,
+                employeeId: this.saveAppointmentBody.selectedEmployee
+            }
+            appointmentService.saveAppointment(body).then(() => {
+                this.getAppointments()
+            })
+        },
+        formatDateWithHour(date) {
+            return moment(date).format("DD-MM-YYYY HH:mm")
+        },
+
+        cancelAppointment(appointmentId) {
+            appointmentService.changeAppointmentStatus(appointmentId, 'canceled').then(() => this.getAppointments());
+        },
+
+        getStatusColour(status) {
+            if (status === 'pending')
+                return 'primary';
+            if (status === 'accepted')
+                return 'green'
+            if (status === 'canceled')
+                return 'error'
+            if (status === 'declined')
+                return 'error'
+            return '';
+        },
+        getStatusLabel(status) {
+            const stats = this.statuses.find((x) => x.key === status);
+            return stats?.value || "Unknown";
+        },
     }
 }
 </script>
 <style scoped>
 .modal {
     padding-bottom: 25px;
+}
+
+.one-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cursor {
+    cursor: pointer;
 }
 </style>

@@ -10,4 +10,5 @@ public class AppointmentRequest {
     private LocalDateTime date;
     private Long departmentId;
     private Long patientId;
+    private Long employeeId;
 }
