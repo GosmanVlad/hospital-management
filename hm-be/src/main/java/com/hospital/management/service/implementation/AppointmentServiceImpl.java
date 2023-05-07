@@ -83,8 +83,8 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
                 predicates.add(criteriaBuilder.equal(root.join("employee").get("employeeId"), appointmentParams.getEmployeeId()));
             }
 
-            if (appointmentParams.getStatus() != null && !appointmentParams.getStatus().isEmpty()) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Appointment_.status), appointmentParams.getStatus()));
+            if (appointmentParams.getStatus() != null && !appointmentParams.getStatus().equals("")) {
+                predicates.add(criteriaBuilder.equal(root.get(Appointment_.status), appointmentParams.getStatus()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));

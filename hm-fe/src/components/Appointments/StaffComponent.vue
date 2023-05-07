@@ -1,4 +1,18 @@
 <template>
+    <v-form ref="form">
+        <v-row>
+            <v-col md="3">
+                <v-select :items="this.statuses" item-title="value" item-value="key" variant="underlined"
+                    v-model="this.filters.status" ref="statusbar" placeholder="status" label="Selecteaza status"
+                    v-on:keyup.enter="loadAppointments()">
+                </v-select>
+            </v-col>
+            <v-col style="padding-top:25px; margin-left:15px">
+                <v-btn @click="loadAppointments()" rounded="lg">Aplica</v-btn>
+                <v-btn @click="resetFilters()" rounded="lg" color="error" style="margin-left:10px">Sterge</v-btn>
+            </v-col>
+        </v-row>
+    </v-form>
     <v-table density="compact">
         <thead class="table-header">
             <tr>
@@ -154,6 +168,15 @@ export default {
                     message: err,
                 }
             });
+        },
+        resetFilters() {
+            this.filters = {
+                userId: undefined,
+                employeeId: null,
+                departmentId: null,
+                status: ""
+            }
+            this.loadAppointments();
         }
     }
 }

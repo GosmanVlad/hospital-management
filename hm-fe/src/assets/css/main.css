@@ -1,6 +1,6 @@
 .content {
-  background-color: rgb(231, 230, 230);
-  height: 100vh;
+  height: 100%;
+  background-attachment: fixed;
   margin: 0;
 }
 
