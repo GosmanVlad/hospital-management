@@ -1,7 +1,7 @@
 <template>
     <v-navigation-drawer class="navigation-drawer-main mt-5" color="#f5f5f5" permanent width="280" border="none"
         elevation="5" max-height="max-content" :rail="rail" @click="rail = false">
-        <v-list-item class="align-left">
+        <v-list-item class="align-left" v-if="isLoggedIn">
             <v-icon v-if="rail">mdi-menu-right</v-icon>
             <template v-slot:append>
                 <v-btn v-if="!rail" variant="text" icon="mdi-menu-left" @click.stop="switchRail()"></v-btn>
@@ -11,10 +11,10 @@
         <v-list v-if="!rail" class="main-nav-container">
             <div v-if="!rail">
                 <v-list-item><router-link :to="'/'" class="router-link-path">
-                        Menu 1
+                        Dashboard
                     </router-link></v-list-item>
-                <v-list-item><router-link :to="'/'" class="router-link-path">
-                        Menu 2
+                <v-list-item><router-link :to="'/appointments'" class="router-link-path">
+                        Programari
                     </router-link></v-list-item>
                 <v-list-item><router-link :to="'/'" class="router-link-path">
                         Menu 3
@@ -35,9 +35,13 @@ export default {
     methods: {
         switchRail() {
             this.rail = !this.rail;
-            console.log(this.rail);
         }
-    }
+    },
+    computed: {
+        isLoggedIn: function () {
+            return this.$store.getters.isAuthenticated;
+        },
+    },
 }
 </script>
 <style scoped>

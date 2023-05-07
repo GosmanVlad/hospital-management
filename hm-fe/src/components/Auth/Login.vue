@@ -5,7 +5,7 @@
             <v-divider /><br />
             <v-sheet width="400" class="mx-auto">
                 <v-text-field variant="underlined" v-model="form.email" label="Email"></v-text-field>
-                <v-text-field variant="underlined" v-model="form.password" label="Parola"></v-text-field>
+                <v-text-field variant="underlined" type="password" v-model="form.password" label="Parola"></v-text-field>
                 <div class="auth-footer-section">
                     <a href="#" class="text-body-2 font-weight-regular" style="color: #9d152d">Forgot Password?</a>
 
