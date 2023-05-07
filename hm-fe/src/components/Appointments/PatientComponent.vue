@@ -100,14 +100,26 @@
     </v-table>
     <div class="text-center">
         <v-pagination v-model="this.pagination.page" :length="this.pagination.totalPages"
-            @update:modelValue="loadMessages(false)" total-visible="10"></v-pagination>
+            @update:modelValue="getAppointments()" total-visible="10"></v-pagination>
     </div>
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+        <v-icon v-if="snackbar.status === 'warning'" style="margin-right:10px">mdi-alert</v-icon>
+        <v-icon v-if="snackbar.status === 'error'" style="margin-right:10px">mdi-alert-circle-outline</v-icon>
+        <template v-slot:actions>
+
+            <v-btn color="black" variant="text" @click="snackbar.show = false">
+                <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
+        </template>
+        {{ snackbar.message }}
+    </v-snackbar>
 </template>
 <script>
 import { appointmentService } from '@/api';
 import { departmentService } from '@/api';
 import { employeeService } from '@/api';
 import { appointmentStatus } from "@/consts/statuses";
+import { snackbarColors } from "@/consts/colors";
 import moment from "moment";
 
 export default {
@@ -132,6 +144,12 @@ export default {
             selectedDate: moment(),
             details: ""
         },
+        snackbar: {
+            status: "",
+            message: "",
+            show: false,
+            color: snackbarColors.error
+        },
         dialog: false,
         departments: [],
         employees: [],
@@ -146,32 +164,93 @@ export default {
             this.filters.userId = this.$store.getters.StateUserId;
             appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;
-                this.pagination.totalPages = res.data.totalPages;
-                this.pagination.totalElements = res.data.totalElements;
+                this.pagination.totalPages = res.data.result.totalPages;
+                this.pagination.totalElements = res.data.result.totalElements;
+            }).catch((err) => {
+                this.snackbar = {
+                    show: true,
+                    status: "error",
+                    color: snackbarColors.error,
+                    message: err,
+                }
             })
         },
         getDepartments() {
             departmentService.getDepartments().then((res) => {
                 this.departments = res.data.result;
+            }).catch((err) => {
+                this.snackbar = {
+                    show: true,
+                    status: "error",
+                    color: snackbarColors.error,
+                    message: err,
+                }
             })
         },
         getEmployeeByDepartmentId() {
             employeeService.getEmployeeByDepartmentId(this.saveAppointmentBody.selectedDepartment).then((res) => {
                 this.employees = res.data.result;
+            }).catch((err) => {
+                this.snackbar = {
+                    show: true,
+                    status: "error",
+                    color: snackbarColors.error,
+                    message: err,
+                }
             })
         },
         saveAppointment() {
-            this.dialog = false;
 
             const body = {
                 details: this.saveAppointmentBody.details,
                 date: moment(this.saveAppointmentBody.selectedDate).format("yyyy-MM-DD[T]HH:mm"),
-                departmentId: this.saveAppointmentBody.selectedDepartment,
+                departmentId: this.saveAppointmentBody.selectedDepartment || null,
                 patientId: this.$store.getters.StateUserId,
-                employeeId: this.saveAppointmentBody.selectedEmployee
+                employeeId: this.saveAppointmentBody.selectedEmployee || null
             }
-            appointmentService.saveAppointment(body).then(() => {
-                this.getAppointments()
+            appointmentService.saveAppointment(body).then((res) => {
+                this.getAppointments();
+
+                if (res.result === 'overlap_appointment') {
+                    this.snackbar = {
+                        show: true,
+                        status: "error",
+                        color: snackbarColors.error,
+                        message: "In acest interval sunt deja facute programari!",
+                    }
+                }
+                this.snackbar = {
+                    show: true,
+                    status: "success",
+                    color: snackbarColors.success,
+                    message: "Programare efectuata pe data de " + this.formatDateWithHour(this.saveAppointmentBody.selectedDate),
+                }
+
+                this.saveAppointmentBody = {
+                    selectedDepartment: undefined,
+                    selectedEmployee: undefined,
+                    selectedDate: moment(),
+                    details: ""
+                };
+                this.dialog = false;
+
+
+            }).catch((err) => {
+                if (err.response.data.result === 'overlap_appointment') {
+                    this.snackbar = {
+                        show: true,
+                        status: "error",
+                        color: snackbarColors.error,
+                        message: "In acest interval sunt deja facute programari!",
+                    }
+                } else if (err.response.data.result === 'some_fields_empty') {
+                    this.snackbar = {
+                        show: true,
+                        status: "error",
+                        color: snackbarColors.error,
+                        message: "Toate campurile trebuie completate!",
+                    }
+                }
             })
         },
         formatDateWithHour(date) {
@@ -179,7 +258,23 @@ export default {
         },
 
         cancelAppointment(appointmentId) {
-            appointmentService.changeAppointmentStatus(appointmentId, 'canceled').then(() => this.getAppointments());
+            appointmentService.changeAppointmentStatus(appointmentId, 'canceled').then(() => {
+                this.getAppointments();
+
+                this.snackbar = {
+                    show: true,
+                    status: "success",
+                    color: snackbarColors.success,
+                    message: "Programare anulata cu succes!",
+                }
+            }).catch((err) => {
+                this.snackbar = {
+                    show: true,
+                    status: "error",
+                    color: snackbarColors.error,
+                    message: err,
+                }
+            });
         },
 
         getStatusColour(status) {

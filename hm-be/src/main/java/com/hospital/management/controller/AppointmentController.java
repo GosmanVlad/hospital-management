@@ -1,5 +1,7 @@
 package com.hospital.management.controller;
 
+import com.hospital.management.exception.appointment.AppointmentFieldsException;
+import com.hospital.management.exception.appointment.AppointmentOverlapException;
 import com.hospital.management.model.Appointment;
 import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.model.dto.appointment.AppointmentParams;
@@ -58,6 +60,12 @@ public class AppointmentController {
 
             responseMap = ResponseUtils.createResponseMap(false, "success_msg", null);
             return ResponseEntity.ok(responseMap);
+        } catch (AppointmentOverlapException overlapException) {
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", overlapException.getMessage());
+            return ResponseEntity.status(409).body(responseMap);
+        } catch (AppointmentFieldsException exception) {
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", exception.getMessage());
+            return ResponseEntity.internalServerError().body(responseMap);
         } catch (Exception e) {
             responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.getMessage());
             return ResponseEntity.internalServerError().body(responseMap);

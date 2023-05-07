@@ -1,6 +1,8 @@
 package com.hospital.management.service.implementation;
 
 import com.hospital.management.constant.AppointmentStatus;
+import com.hospital.management.exception.appointment.AppointmentFieldsException;
+import com.hospital.management.exception.appointment.AppointmentOverlapException;
 import com.hospital.management.model.*;
 import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.model.dto.appointment.AppointmentParams;
@@ -38,23 +40,30 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
     AppointmentRepository appointmentRepository;
 
     @Override
-    public void add(AppointmentRequest appointmentRequest) {
+    public void add(AppointmentRequest appointmentRequest) throws AppointmentFieldsException, AppointmentOverlapException {
+        if (appointmentRequest.getDepartmentId() == null || appointmentRequest.getDate() == null || appointmentRequest.getEmployeeId() == null) {
+            throw new AppointmentFieldsException("some_fields_empty");
+        }
+
         Department department = departmentRepository.findByDepartmentId(appointmentRequest.getDepartmentId());
         User patient = userRepository.findByUserId(appointmentRequest.getPatientId());
         Employee doctor = employeeRepository.findByEmployeeId(appointmentRequest.getEmployeeId());
+        Appointment checkAppointment = appointmentRepository.findByDate(appointmentRequest.getDate());
 
-        if(department != null && patient != null && doctor != null) {
-            Appointment appointment = new Appointment();
-
-            appointment.setDetails(appointmentRequest.getDetails());
-            appointment.setDate(appointmentRequest.getDate());
-            appointment.setDepartment(department);
-            appointment.setUser(patient);
-            appointment.setStatus(AppointmentStatus.PENDING);
-            appointment.setEmployee(doctor);
-            appointmentRepository.save(appointment);
-
+        if(checkAppointment != null) {
+            throw new AppointmentOverlapException("overlap_appointment");
         }
+
+
+        Appointment appointment = new Appointment();
+
+        appointment.setDetails(appointmentRequest.getDetails());
+        appointment.setDate(appointmentRequest.getDate());
+        appointment.setDepartment(department);
+        appointment.setUser(patient);
+        appointment.setStatus(AppointmentStatus.PENDING);
+        appointment.setEmployee(doctor);
+        appointmentRepository.save(appointment);
     }
 
     @Override

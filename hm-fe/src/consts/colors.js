@@ -1,6 +1,7 @@
 const snackbarColors = {
     warning: "#cc9900",
-    error: "error"
+    error: "error",
+    success: "success"
 };
 
 export { snackbarColors };
