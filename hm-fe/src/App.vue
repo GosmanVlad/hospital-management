@@ -4,7 +4,9 @@
     <Sidebar />
 
     <v-main class="content">
-      <router-view />
+      <div class="page-content">
+        <router-view />
+      </div>
     </v-main>
   </v-layout>
 </template>
