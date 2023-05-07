@@ -1,4 +1,7 @@
 <template>
+    <h3 class="page-title" v-if="role === 'DOCTOR'">Istoric programari</h3>
+    <h3 class="page-title" v-if="role === 'PATIENT'">Programari active</h3>
+
     <PatientComponent v-if="role === 'PATIENT'" />
     <StaffComponent v-if="role === 'DOCTOR' || role == 'NURSE'" />
 </template>
@@ -20,3 +23,4 @@ export default {
     },
 }
 </script>
+<style scoped></style>

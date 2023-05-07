@@ -9,9 +9,14 @@ const headers = {
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const employeeService = {
-    getEmployeeByDepartmentId
+    getEmployeeByDepartmentId,
+    getDoctors
 };
 
 function getEmployeeByDepartmentId(departmentId) {
     return axios.get(`${apiUrl}/employees/departments/${departmentId}`, { headers });
+}
+
+function getDoctors() {
+    return axios.get(`${apiUrl}/employees`, { headers });
 }

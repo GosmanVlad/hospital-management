@@ -30,4 +30,18 @@ public class EmployeeController {
             return ResponseEntity.internalServerError().body(responseMap);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> getEmployees() {
+        Map<String, Object> responseMap;
+
+        try {
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", employeeService.findAll());
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
 }

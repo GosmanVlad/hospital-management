@@ -122,6 +122,15 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
         propertyMapper.addMappings(
                 mapper -> mapper.map(src -> src.getEmployee().getUser().getUsername(), AppointmentOutcomingDto::setEmployeeName)
         );
+
+        // Map applicant
+        propertyMapper.addMappings(
+                mapper -> mapper.map(src -> src.getUser().getFirstName(), AppointmentOutcomingDto::setFirstNameApplicant)
+        );
+
+        propertyMapper.addMappings(
+                mapper -> mapper.map(src -> src.getUser().getLastName(), AppointmentOutcomingDto::setLastNameApplicant)
+        );
         return ResponseUtils.mapEntityListToDtoList(modelMapper, appointments, appointmentOutcomingDtoClass);
     }
 

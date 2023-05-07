@@ -28,7 +28,7 @@ function getAppointments(filters, pagination) {
         status: filters?.status || "",
     };
 
-    return axios.get(`${apiUrl}/appointments/${pagFilters}`, params, { headers });
+    return axios.get(`${apiUrl}/appointments/${pagFilters}`, { params: params }, { headers });
 }
 
 

@@ -17,4 +17,14 @@ public class EmployeeServiceImpl implements EmployeeServiceUtil {
     public List<Employee> findByDepartmentId(Long departmentId) {
         return employeeRepository.findByDepartmentId(departmentId);
     }
+
+    @Override
+    public Employee findByUserId(Long userId) {
+        return employeeRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
 }

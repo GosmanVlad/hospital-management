@@ -1,7 +1,9 @@
-const appointmentStatus = [{ key: 'pending', value: "In asteptare" },
-{ key: 'accepted', value: "Acceptat" },
-{ key: 'declined', value: "Respins" },
-{ key: 'canceled', value: "Canceled" }];
+const appointmentStatus = [
+    { key: '', value: "Toate" },
+    { key: 'pending', value: "In asteptare" },
+    { key: 'accepted', value: "Acceptat" },
+    { key: 'declined', value: "Respins" },
+    { key: 'canceled', value: "Anulat" }];
 
 
 export { appointmentStatus }

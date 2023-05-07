@@ -1,5 +1,31 @@
 <template>
-    <h3 class="page-title">Istoric programari</h3>
+    <v-form ref="form">
+        <v-row>
+            <v-col md="3">
+                <v-select :items="this.statuses" item-title="value" item-value="key" variant="underlined"
+                    v-model="this.filters.status" ref="statusbar" placeholder="status" label="Selecteaza status"
+                    v-on:keyup.enter="getAppointments()">
+                </v-select>
+            </v-col>
+            <v-col md="3">
+                <v-select :items="this.departments" item-title="departmentName" item-value="departmentId"
+                    variant="underlined" v-model="this.filters.departmentId" ref="department" placeholder="department"
+                    label="Selecteaza departament" v-on:keyup.enter="getAppointments()">
+                </v-select>
+            </v-col>
+            <v-col md="3">
+                <v-select :items="this.doctors" :item-title="(value) => value.user.firstName + ' ' + value.user.lastName"
+                    item-value="employeeId" variant="underlined" v-model="this.filters.employeeId" ref="statusbar"
+                    placeholder="Selecteaza doctor" label="Selecteaza doctor" v-on:keyup.enter="getAppointments()">
+                </v-select>
+            </v-col>
+            <v-col style="padding-top:25px; margin-left:15px">
+                <v-btn @click="getAppointments()" rounded="lg">Aplica</v-btn>
+                <v-btn @click="resetFilters()" rounded="lg" color="error" style="margin-left:10px">Sterge</v-btn>
+            </v-col>
+        </v-row>
+    </v-form>
+
     <v-row justify="end" class="modal">
         <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
@@ -153,11 +179,13 @@ export default {
         dialog: false,
         departments: [],
         employees: [],
-        statuses: appointmentStatus
+        statuses: appointmentStatus,
+        doctors: []
     }),
     mounted() {
         this.getAppointments();
         this.getDepartments();
+        this.getDoctors();
     },
     methods: {
         getAppointments() {
@@ -253,6 +281,7 @@ export default {
                 }
             })
         },
+
         formatDateWithHour(date) {
             return moment(date).format("DD-MM-YYYY HH:mm")
         },
@@ -292,6 +321,20 @@ export default {
             const stats = this.statuses.find((x) => x.key === status);
             return stats?.value || "Unknown";
         },
+        getDoctors() {
+            employeeService.getDoctors().then((res) => {
+                this.doctors = res.data.result;
+            })
+        },
+        resetFilters() {
+            this.filters = {
+                userId: undefined,
+                employeeId: null,
+                departmentId: null,
+                status: ""
+            }
+            this.getAppointments();
+        }
     }
 }
 </script>

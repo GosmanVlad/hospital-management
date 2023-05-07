@@ -15,4 +15,6 @@ public class AppointmentOutcomingDto {
     private String employeeName;
     private String departmentName;
     private Long userId;
+    private String firstNameApplicant;
+    private String lastNameApplicant;
 }
