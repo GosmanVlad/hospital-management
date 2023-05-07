@@ -6,6 +6,9 @@ import store from './store';
 import { loadFonts } from './plugins/webfontloader'
 import axios from 'axios';
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 loadFonts()
 
 axios.defaults.withCredentials = false;
@@ -19,4 +22,5 @@ createApp(App)
   .use(vuetify)
   .use(router)
   .use(store)
+  .component('Datepicker', VueDatePicker)
   .mount('#app')

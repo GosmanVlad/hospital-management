@@ -1,7 +1,7 @@
 <template>
     <h3 class="page-title">Istoric programari</h3>
     <v-row justify="end" class="modal">
-        <v-dialog v-model="dialog" persistent width="1024">
+        <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
                 <v-btn color="error" v-bind="props">
                     Efectueaza o programare
@@ -14,6 +14,9 @@
                 <v-card-text>
                     <v-container>
                         <v-row>
+                            <v-col cols="12">
+                                <Datepicker></Datepicker>
+                            </v-col>
                             <v-col cols="12" sm="6">
                                 <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
                             </v-col>
@@ -22,6 +25,7 @@
                                     :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
                                     label="Interests" multiple></v-autocomplete>
                             </v-col>
+
                             <v-col cols="12">
                                 <v-text-field label="Detalii"></v-text-field>
                             </v-col>
