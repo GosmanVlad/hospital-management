@@ -1,26 +1,21 @@
 <template>
-    <v-form v-model="valid">
-        <v-container fill-height fluid>
-            <v-row justify="center">
-                Contul nu este activat. <br />
-                Seteaza o parola pentru a-l activa.
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.password" label="Parola" required type="password"></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="form.repeatPassword" label="Repeta parola" required
-                        type="password"></v-text-field>
-                </v-col>
-            </v-row>
-
-            <v-card-actions class="justify-center">
-                <v-btn>
-                    <v-btn @click.prevent="activateAccount" rounded="lg" color="primary">Activeaza cont</v-btn>
-                </v-btn>
-            </v-card-actions>
-        </v-container>
-    </v-form>
+    <div class="d-flex align-center justify-center" style="height: 80vh">
+        <div class="login-form">
+            <h1 class="d-flex align-center justify-center auth-title">Activare cont</h1> <br />
+            <p class="description">Pentru a activa contul, este necesara setarea unei noi parole</p>
+            <v-divider /><br />
+            <v-sheet width="400" class="mx-auto">
+                <v-text-field variant="underlined" type="password" v-model="form.password"
+                    label="Parola noua"></v-text-field>
+                <v-text-field variant="underlined" type="password" v-model="form.repeatPassword"
+                    label="Repetare parola noua"></v-text-field>
+                <div class="auth-footer-section">
+                    <v-btn type="submit" variant="outlined" color="error" block class="mt-2"
+                        @click.prevent="activateAccount">Activeaza cont</v-btn>
+                </div>
+            </v-sheet>
+        </div>
+    </div>
     <v-snackbar v-model="snackbar.show" :color="snackbar.color">
         <v-icon v-if="snackbar.status === 'warning'" style="margin-right:10px">mdi-alert</v-icon>
         <v-icon v-if="snackbar.status === 'error'" style="margin-right:10px">mdi-alert-circle-outline</v-icon>
@@ -78,3 +73,14 @@ export default {
     },
 }
 </script>
+<style scoped>
+.auth-footer-section {
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+
+.description {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+</style>

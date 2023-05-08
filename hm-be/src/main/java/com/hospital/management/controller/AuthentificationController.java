@@ -1,11 +1,13 @@
 package com.hospital.management.controller;
 
 import com.hospital.management.config.JwtToken;
+import com.hospital.management.model.Employee;
 import com.hospital.management.model.User;
 import com.hospital.management.model.dto.auth.ChangePasswordRequest;
 import com.hospital.management.model.dto.auth.LoginRequest;
 import com.hospital.management.model.dto.auth.RegisterRequest;
 import com.hospital.management.service.implementation.UserDetailsServiceImpl;
+import com.hospital.management.service.util.EmployeeServiceUtil;
 import com.hospital.management.service.util.UserServiceUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +35,9 @@ public class AuthentificationController {
 
     @Autowired
     UserServiceUtil userService;
+
+    @Autowired
+    EmployeeServiceUtil employeeService;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -68,7 +73,11 @@ public class AuthentificationController {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
             String token = jwtTokenUtil.generateToken(userDetails);
+            Employee employee = employeeService.findByUserId(user.getUserId());
 
+            if(employee != null) {
+                responseMap.put("employee_id", employee.getEmployeeId());
+            }
             responseMap.put("email", user.getEmail());
             responseMap.put("username", user.getUsername());
             responseMap.put("user_id", user.getUserId());

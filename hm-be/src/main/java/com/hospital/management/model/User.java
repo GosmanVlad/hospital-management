@@ -2,8 +2,10 @@ package com.hospital.management.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -12,6 +14,7 @@ import java.util.Date;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id",nullable = false)
     private Long userId;
 
     private String firstName;
@@ -30,5 +33,13 @@ public class User {
 
     @Column(unique = true)
     private String email;
+
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private Employee employee;
+
+    @OneToMany(mappedBy = "department")
+    @JsonIgnore
+    private Collection<Appointment> appointments;
 
 }

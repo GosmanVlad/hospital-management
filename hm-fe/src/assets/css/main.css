@@ -1,8 +1,26 @@
 .content {
-  background-color: rgb(231, 230, 230);
-  height: 100vh;
+  height: 100%;
+  background-attachment: fixed;
   margin: 0;
 }
+
+.page-title {
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 27px;
+  color: #9d152d;
+  margin-bottom: 40px;
+}
+
+.page-content {
+  max-width: 95% !important;
+  margin-top: 48px;
+  width: 100%;
+  padding: 16px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .v-toolbar__content,
 .v-toolbar__extension {
   background-color: #9d152d;
