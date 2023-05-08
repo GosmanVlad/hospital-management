@@ -16,8 +16,8 @@
                 <v-list-item><router-link :to="'/appointments'" class="router-link-path">
                         Programari
                     </router-link></v-list-item>
-                <v-list-item><router-link :to="'/'" class="router-link-path">
-                        Menu 3
+                <v-list-item><router-link :to="'/hospitalization'" class="router-link-path">
+                        Internari
                     </router-link></v-list-item>
             </div>
         </v-list>

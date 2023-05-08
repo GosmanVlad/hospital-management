@@ -6,6 +6,8 @@ import com.hospital.management.service.util.UserServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserServiceUtil {
 
@@ -30,6 +32,11 @@ public class UserServiceImpl implements UserServiceUtil {
     @Override
     public User findByUserId(Long userId) {
         return userRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<User> findAllPatients() {
+        return userRepository.findAllPatients();
     }
 
 }

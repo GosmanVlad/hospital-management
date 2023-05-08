@@ -3,6 +3,7 @@ import Homepage from "../pages/Homepage.vue";
 import Register from "../pages/Register.vue";
 import Activation from "../pages/Activation.vue";
 import Appointments from "../pages/Appointments";
+import Hospitalization from "../pages/Hospitalization";
 import Login from "../pages/Login.vue";
 import { appName } from "../consts"
 import store from "../store";
@@ -38,6 +39,11 @@ const router = createRouter({
             path: "/appointments",
             name: "appointments",
             component: Appointments,
+        },
+        {
+            path: "/hospitalization",
+            name: "hospitalization",
+            component: Hospitalization,
         },
     ],
 });
