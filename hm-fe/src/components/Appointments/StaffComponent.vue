@@ -13,6 +13,7 @@
             </v-col>
         </v-row>
     </v-form>
+    <v-progress-linear indeterminate color="red-darken-2" v-if="loading"></v-progress-linear>
     <v-table density="compact">
         <thead class="table-header">
             <tr>
@@ -89,6 +90,7 @@ export default {
     name: "StaffComponent",
     data: () => ({
         tableData: undefined,
+        loading: false,
         pagination: {
             page: 1,
             totalPages: 1,
@@ -115,11 +117,13 @@ export default {
     methods: {
         loadAppointments() {
             this.filters.employeeId = this.$store.getters.StateEmployeeId;
+            this.loading = true;
             appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;
                 this.pagination.totalPages = res.data.result.totalPages;
                 this.pagination.totalElements = res.data.result.totalElements;
-            })
+                this.loading = false;
+            }).catch(() => this.loading = false)
         },
         formatDateWithHour(date) {
             return moment(date).format("DD-MM-YYYY HH:mm")

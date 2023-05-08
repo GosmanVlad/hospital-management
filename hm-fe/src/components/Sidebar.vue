@@ -8,7 +8,7 @@
             </template>
         </v-list-item>
         <v-divider v-if="!rail"></v-divider>
-        <v-list v-if="!rail" class="main-nav-container">
+        <v-list v-if="!rail && isLoggedIn" class="main-nav-container">
             <div v-if="!rail">
                 <v-list-item><router-link :to="'/'" class="router-link-path">
                         Dashboard

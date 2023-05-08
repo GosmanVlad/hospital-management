@@ -3,7 +3,8 @@ const appointmentStatus = [
     { key: 'pending', value: "In asteptare" },
     { key: 'accepted', value: "Acceptat" },
     { key: 'declined', value: "Respins" },
-    { key: 'canceled', value: "Anulat" }];
+    { key: 'canceled', value: "Anulat" },
+    { key: 'solved', value: "Rezolvat" },];
 
 
 export { appointmentStatus }

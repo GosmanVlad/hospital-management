@@ -80,6 +80,7 @@
             </v-card>
         </v-dialog>
     </v-row>
+    <v-progress-linear indeterminate color="red-darken-2" v-if="loading"></v-progress-linear>
     <v-table density="compact">
         <thead class="table-header">
             <tr>
@@ -152,6 +153,7 @@ export default {
     name: "PatientComponent",
     data: () => ({
         tableData: undefined,
+        loading: false,
         pagination: {
             page: 1,
             totalPages: 1,
@@ -190,17 +192,14 @@ export default {
     methods: {
         getAppointments() {
             this.filters.userId = this.$store.getters.StateUserId;
+            this.loading = true;
             appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;
                 this.pagination.totalPages = res.data.result.totalPages;
                 this.pagination.totalElements = res.data.result.totalElements;
-            }).catch((err) => {
-                this.snackbar = {
-                    show: true,
-                    status: "error",
-                    color: snackbarColors.error,
-                    message: err,
-                }
+                this.loading = false;
+            }).catch(() => {
+                this.loading = false;
             })
         },
         getDepartments() {
