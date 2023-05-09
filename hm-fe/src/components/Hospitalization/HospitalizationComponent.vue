@@ -25,11 +25,17 @@
                                     v-model="this.data.endDate">
                                 </Datepicker>
                             </v-col>
-                            <v-col md="12">
+                            <v-col md="6">
                                 <v-select :items="this.patients"
                                     :item-title="(value) => value.firstName + ' ' + value.lastName" item-value="userId"
                                     variant="underlined" v-model="this.data.patientId" ref="patient"
                                     placeholder="Selecteaza pacient" label="Selecteaza pacient">
+                                </v-select>
+                            </v-col>
+                            <v-col md="6">
+                                <v-select :items="this.salons" item-title="salonName" item-value="salonId"
+                                    variant="underlined" v-model="this.data.salonId" ref="salon"
+                                    placeholder="Selecteaza salon" label="Selecteaza salon">
                                 </v-select>
                             </v-col>
 
@@ -107,6 +113,7 @@
 import { snackbarColors } from "@/consts/colors";
 import { hospitalizationService } from '@/api';
 import { userService } from '@/api';
+import { salonService } from '@/api';
 import moment from "moment";
 
 export default {
@@ -127,7 +134,8 @@ export default {
             doctorId: undefined,
             patientId: undefined,
             departmentId: undefined,
-            diagnosis: ""
+            diagnosis: "",
+            salonId: undefined
         },
         filters: {
             startDate: undefined,
@@ -140,11 +148,13 @@ export default {
             show: false,
             color: snackbarColors.error
         },
-        patients: []
+        patients: [],
+        salons: []
     }),
     mounted() {
         this.loadAllPatients();
         this.loadAllHospitalizations();
+        this.getAllSalons();
     },
     methods: {
         saveHospitalization() {
@@ -180,6 +190,9 @@ export default {
         formatDateWithHour(date) {
             return moment(date).format("DD-MM-YYYY HH:mm")
         },
+        getAllSalons() {
+            salonService.getAllSalons().then((res) => this.salons = res.data.result);
+        }
     }
 }
 </script>

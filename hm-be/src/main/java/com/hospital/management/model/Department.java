@@ -27,4 +27,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     @JsonIgnore
     private Collection<Appointment> appointments;
+
+    @OneToMany(mappedBy = "department")
+    @JsonIgnore
+    private Collection<Salon> salons;
 }

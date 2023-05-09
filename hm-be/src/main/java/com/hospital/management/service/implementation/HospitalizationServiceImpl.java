@@ -5,10 +5,7 @@ import com.hospital.management.model.*;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.hospitalization.HospitalizationRequest;
-import com.hospital.management.repository.DepartmentRepository;
-import com.hospital.management.repository.EmployeeRepository;
-import com.hospital.management.repository.HospitalizationRepository;
-import com.hospital.management.repository.UserRepository;
+import com.hospital.management.repository.*;
 import com.hospital.management.service.util.HospitalizationServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.modelmapper.ModelMapper;
@@ -38,6 +35,9 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    SalonRepository salonRepository;
 
     @Override
     public Page<Hospitalization> findByFilter(HospitalizationParams hospitalizationParams, Pageable pageable) {
@@ -86,8 +86,9 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
     @Override
     public void add(HospitalizationRequest hospitalizationRequest) throws AppointmentFieldsException {
         Employee doctor = employeeRepository.findByUserId(hospitalizationRequest.getDoctorId());
+        Salon salon = salonRepository.findBySalonId(hospitalizationRequest.getSalonId());
 
-        if (doctor.getDepartment().getDepartmentId() == null || hospitalizationRequest.getStartDate() == null || hospitalizationRequest.getDoctorId() == null) {
+        if (salon == null || doctor.getDepartment().getDepartmentId() == null || hospitalizationRequest.getStartDate() == null || hospitalizationRequest.getDoctorId() == null) {
             throw new AppointmentFieldsException("some_fields_empty");
         }
 
@@ -101,6 +102,7 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
         hospitalization.setDoctor(doctor);
         hospitalization.setPatient(patient);
         hospitalization.setDiagnosis(hospitalizationRequest.getDiagnosis());
+        hospitalization.setSalon(salon);
         hospitalizationRepository.save(hospitalization);
     }
 }

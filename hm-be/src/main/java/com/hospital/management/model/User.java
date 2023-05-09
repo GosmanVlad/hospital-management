@@ -42,8 +42,4 @@ public class User {
     @JsonIgnore
     private Collection<Appointment> appointments;
 
-    @OneToMany(mappedBy = "department")
-    @JsonIgnore
-    private Collection<Hospitalization> hospitalizations;
-
 }

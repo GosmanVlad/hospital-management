@@ -30,4 +30,8 @@ public class Hospitalization {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "doctor_id")
     private Employee doctor;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salon_id")
+    private Salon salon;
 }

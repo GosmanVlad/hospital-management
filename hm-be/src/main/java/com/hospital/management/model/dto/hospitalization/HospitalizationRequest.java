@@ -12,4 +12,5 @@ public class HospitalizationRequest {
     private Date startDate;
     private Date endDate;
     private String diagnosis;
+    private Long salonId;
 }
