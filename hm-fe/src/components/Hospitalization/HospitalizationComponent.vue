@@ -1,4 +1,27 @@
 <template>
+    <v-form ref="form">
+        <v-row>
+            <v-col md="3" style="padding-top:16px;">
+                <v-text-field label="Cauta numele pacientului" v-model="this.filters.search"></v-text-field>
+            </v-col>
+            <v-col md="3">
+                <label>Data internarii</label>
+                <Datepicker required autoApply valueType="format" enableTimePicker="false" id="startDate"
+                    v-model="this.filters.startDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
+                </Datepicker>
+            </v-col>
+            <v-col md="3">
+                <label>Data externarii</label>
+                <Datepicker required autoApply valueType="format" enableTimePicker="false" id="endDate"
+                    v-model="this.filters.endDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
+                </Datepicker>
+            </v-col>
+            <v-col style="padding-top:25px; margin-left:15px">
+                <v-btn @click="loadAllHospitalizations()" rounded="lg">Aplica</v-btn>
+                <v-btn @click="resetFilters()" rounded="lg" color="error" style="margin-left:10px">Sterge</v-btn>
+            </v-col>
+        </v-row>
+    </v-form>
     <v-row justify="end" class="modal">
         <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
@@ -16,13 +39,13 @@
                             <v-col cols="6">
                                 <label>Data internarii</label>
                                 <Datepicker required autoApply valueType="format" enableTimePicker="false" id="startDate"
-                                    v-model="this.data.startDate">
+                                    v-model="this.data.startDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
                                 </Datepicker>
                             </v-col>
                             <v-col cols="6">
                                 <label>Data externarii</label>
                                 <Datepicker required autoApply valueType="format" enableTimePicker="false" id="endDate"
-                                    v-model="this.data.endDate">
+                                    v-model="this.data.endDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
                                 </Datepicker>
                             </v-col>
                             <v-col md="6">
@@ -89,8 +112,8 @@
                 <td>{{ item.hospitalizationId }}</td>
                 <td>{{ item.firstNamePatient + ' ' + item.lastNamePatient }}</td>
                 <td>{{ item.salonName }}</td>
-                <td>{{ formatDateWithHour(item.startDate) }}</td>
-                <td>{{ formatDateWithHour(item.endDate) }}</td>
+                <td>{{ formatDateWithoutHour(item.startDate) }}</td>
+                <td>{{ formatDateWithoutHour(item.endDate) }}</td>
                 <td>{{ item.doctorName }}</td>
                 <td>Todo: Download pdf</td>
             </tr>
@@ -182,6 +205,12 @@ export default {
         },
         loadAllHospitalizations() {
             this.loading = true;
+
+            if (this.filters?.startDate)
+                this.filters.startDate = moment(this.filters.startDate).format("yyyy-MM-DD");
+            if (this.filters?.endDate)
+                this.filters.endDate = moment(this.filters.endDate).format("yyyy-MM-DD");
+
             hospitalizationService.getHospitalization(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;
                 this.pagination.totalPages = res.data.result.totalPages;
@@ -191,11 +220,19 @@ export default {
                 this.loading = false;
             })
         },
-        formatDateWithHour(date) {
-            return moment(date).format("DD-MM-YYYY HH:mm")
+        formatDateWithoutHour(date) {
+            return moment(date).format("DD-MM-YYYY")
         },
         getAllSalons() {
             salonService.getAllSalons().then((res) => this.salons = res.data.result);
+        },
+        resetFilters() {
+            this.filters = {
+                startDate: undefined,
+                endDate: undefined,
+                search: ""
+            }
+            this.loadAllHospitalizations();
         }
     }
 }

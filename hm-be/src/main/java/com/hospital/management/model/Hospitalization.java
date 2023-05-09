@@ -14,7 +14,9 @@ public class Hospitalization {
     @Column(name = "hospitalization_id",nullable = false)
     private Long hospitalizationId;
 
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    @Temporal(TemporalType.DATE)
     private Date endDate;
     private String docPath;
     private String diagnosis;
