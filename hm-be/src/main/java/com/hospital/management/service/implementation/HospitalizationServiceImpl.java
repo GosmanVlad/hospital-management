@@ -176,4 +176,9 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
         context.setVariable("department", hospitalization.getDoctor().getDepartment().getDepartmentName());
         return context;
     }
+
+    @Override
+    public void updateHospitalizationDocPath(Long hospitalizationId, String path) {
+        hospitalizationRepository.updateHospitalizationDocPath(hospitalizationId, path);
+    }
 }

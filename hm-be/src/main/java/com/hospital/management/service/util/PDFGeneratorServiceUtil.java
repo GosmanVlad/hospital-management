@@ -8,5 +8,5 @@ import java.io.IOException;
 
 public interface PDFGeneratorServiceUtil {
     String parseThymeleafTemplate(String templateFileName, Context mappedData);
-    void generatePdfFromHtml(String html, String fileName) throws FileNotFoundException, IOException, DocumentException;
+    String generatePdfFromHtml(String html, String fileName) throws FileNotFoundException, IOException, DocumentException;
 }

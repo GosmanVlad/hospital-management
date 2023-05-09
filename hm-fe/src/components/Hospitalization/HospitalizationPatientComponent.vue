@@ -30,7 +30,15 @@
                 <td>{{ formatDateWithoutHour(item.startDate) }}</td>
                 <td>{{ formatDateWithoutHour(item.endDate) }}</td>
                 <td>{{ item.doctorName }}</td>
-                <td>Todo: Download pdf</td>
+                <td>
+                    <div class="one-line">
+                        <span class="group pa-2 cursor" @click="generatePdf(item.hospitalizationId)">
+                            <v-tooltip activator="parent" location="top">Descarca internarea</v-tooltip>
+                            <v-icon>mdi-file-cabinet</v-icon>
+                        </span>
+
+                    </div>
+                </td>
             </tr>
         </tbody>
     </v-table>
@@ -42,6 +50,7 @@
 
 <script>
 import { hospitalizationService } from '@/api';
+import { fileService } from '@/api';
 import moment from "moment";
 
 export default {
@@ -80,6 +89,27 @@ export default {
         formatDateWithoutHour(date) {
             return moment(date).format("DD-MM-YYYY")
         },
+        generatePdf(hospitalizationId) {
+            hospitalizationService.generatePdf(hospitalizationId).then((res) => this.downloadFile(res.data.result));
+        },
+        downloadFile(filePath) {
+            fileService.download(filePath);
+        },
     }
 }
 </script>
+<style scoped>
+.modal {
+    padding-bottom: 25px;
+}
+
+.one-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cursor {
+    cursor: pointer;
+}
+</style>

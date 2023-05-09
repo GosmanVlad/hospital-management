@@ -153,6 +153,7 @@ import { snackbarColors } from "@/consts/colors";
 import { hospitalizationService } from '@/api';
 import { userService } from '@/api';
 import { salonService } from '@/api';
+import { fileService } from '@/api';
 import moment from "moment";
 
 export default {
@@ -250,8 +251,11 @@ export default {
             hospitalizationService.exportExcel(this.filters);
         },
         generatePdf(hospitalizationId) {
-            hospitalizationService.generatePdf(hospitalizationId);
-        }
+            hospitalizationService.generatePdf(hospitalizationId).then((res) => this.downloadFile(res.data.result));
+        },
+        downloadFile(filePath) {
+            fileService.download(filePath);
+        },
     },
     computed: {
         role: function () {

@@ -105,8 +105,10 @@ public class HospitalizationController {
         Hospitalization hospitalization = hospitalizationService.findByHospitalizationId(hospitalizationId);
         Context context = hospitalizationService.mapThymeleafVariables(hospitalization);
         String test = pdfGeneratorService.parseThymeleafTemplate("hospitalization", context);
-        String fileName = "invoice_" + hospitalizationId;
-        pdfGeneratorService.generatePdfFromHtml(test, fileName);
+        String fileName = "hospitalization_" + hospitalizationId;
+        String path = pdfGeneratorService.generatePdfFromHtml(test, fileName);
+
+        hospitalizationService.updateHospitalizationDocPath(hospitalizationId, path);
         responseMap = ResponseUtils.createResponseMap(false, "success_msg", this.pdfGenerator + fileName + ".pdf");
         return ResponseEntity.ok(responseMap);
     }

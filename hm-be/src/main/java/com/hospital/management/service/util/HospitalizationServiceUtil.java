@@ -24,4 +24,6 @@ public interface HospitalizationServiceUtil {
     Hospitalization findByHospitalizationId(Long hospitalizationId);
 
     Context mapThymeleafVariables(Hospitalization hospitalization);
+
+    void updateHospitalizationDocPath(Long hospitalizationId, String path);
 }
