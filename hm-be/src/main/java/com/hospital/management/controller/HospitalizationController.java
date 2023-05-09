@@ -52,7 +52,7 @@ public class HospitalizationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAppointment(@RequestBody HospitalizationRequest hospitalizationRequest) {
+    public ResponseEntity<?> createHospitalization(@RequestBody HospitalizationRequest hospitalizationRequest) {
         Map<String, Object> responseMap;
 
         try {

@@ -68,6 +68,9 @@
                     Pacient
                 </th>
                 <th class="text-left">
+                    Salon
+                </th>
+                <th class="text-left">
                     Data internarii
                 </th>
                 <th class="text-left">
@@ -85,6 +88,7 @@
             <tr v-for="item in tableData?.content" :key="item.hospitalizationId" class="table-rows">
                 <td>{{ item.hospitalizationId }}</td>
                 <td>{{ item.firstNamePatient + ' ' + item.lastNamePatient }}</td>
+                <td>{{ item.salonName }}</td>
                 <td>{{ formatDateWithHour(item.startDate) }}</td>
                 <td>{{ formatDateWithHour(item.endDate) }}</td>
                 <td>{{ item.doctorName }}</td>

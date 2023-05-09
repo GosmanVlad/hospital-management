@@ -1,6 +1,7 @@
 package com.hospital.management.service.implementation;
 
 import com.hospital.management.exception.appointment.AppointmentFieldsException;
+import com.hospital.management.exception.salon.SalonSeatsException;
 import com.hospital.management.model.*;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
@@ -78,18 +79,25 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
         propertyMapper.addMappings(mapper -> mapper.map(src -> src.getDepartment().getDepartmentName(), HospitalizationOutcomingDto::setDepartmentName));
         propertyMapper.addMappings(mapper -> mapper.map(src -> src.getPatient().getFirstName(), HospitalizationOutcomingDto::setFirstNamePatient));
         propertyMapper.addMappings(mapper -> mapper.map(src -> src.getPatient().getLastName(), HospitalizationOutcomingDto::setLastNamePatient));
+        propertyMapper.addMappings(mapper -> mapper.map(src -> src.getSalon().getSalonName(), HospitalizationOutcomingDto::setSalonName));
 
 
         return ResponseUtils.mapEntityListToDtoList(modelMapper, hospitalizations, hospitalizationOutcomingDtoClass);
     }
 
     @Override
-    public void add(HospitalizationRequest hospitalizationRequest) throws AppointmentFieldsException {
+    public void add(HospitalizationRequest hospitalizationRequest) throws AppointmentFieldsException, SalonSeatsException {
         Employee doctor = employeeRepository.findByUserId(hospitalizationRequest.getDoctorId());
         Salon salon = salonRepository.findBySalonId(hospitalizationRequest.getSalonId());
 
         if (salon == null || doctor.getDepartment().getDepartmentId() == null || hospitalizationRequest.getStartDate() == null || hospitalizationRequest.getDoctorId() == null) {
             throw new AppointmentFieldsException("some_fields_empty");
+        }
+
+        //Check salons
+        List<Hospitalization> checkMaximulSeats = hospitalizationRepository.findBySalonIdAndDate(salon.getSalonId(), hospitalizationRequest.getStartDate());
+        if(checkMaximulSeats.size() + 1 > salon.getSeats()) {
+            throw new SalonSeatsException("no_more_seats");
         }
 
         Hospitalization hospitalization = new Hospitalization();

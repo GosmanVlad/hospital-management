@@ -16,4 +16,5 @@ public class HospitalizationOutcomingDto {
     private Long patientId;
     private String firstNamePatient;
     private String lastNamePatient;
+    private String salonName;
 }
