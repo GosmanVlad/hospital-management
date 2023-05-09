@@ -19,7 +19,8 @@ public class User {
 
     private String firstName;
     private String lastName;
-
+    private String personalNumber;
+    private String phone;
     private Date createdDate;
     private Date modifiedDate;
     private String createdBy;
@@ -27,6 +28,12 @@ public class User {
     private String password;
     private String role;
     private boolean activated;
+    private String homeAddress;
+    private String city;
+    private String country;
+
+    @Temporal(TemporalType.DATE)
+    private Date birthdate;
 
     @Column(unique = true)
     private String username;

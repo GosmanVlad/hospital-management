@@ -41,6 +41,9 @@ export default {
         isLoggedIn: function () {
             return this.$store.getters.isAuthenticated;
         },
+        role: function () {
+            return this.$store.getters.StateRole;
+        },
     },
 }
 </script>

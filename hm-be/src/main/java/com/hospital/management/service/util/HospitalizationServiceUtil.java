@@ -8,6 +8,7 @@ import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.hospitalization.HospitalizationRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface HospitalizationServiceUtil {
     List<?> mapEntityListToDtoList(Page<Hospitalization> hospitalizations, Class<HospitalizationOutcomingDto> hospitalizationOutcomingDtoClass);
 
     void add(HospitalizationRequest hospitalizationRequest) throws AppointmentFieldsException, SalonSeatsException;
+
+    List<Hospitalization> findByFilter(HospitalizationParams hospitalizationParams);
+
+    Hospitalization findByHospitalizationId(Long hospitalizationId);
+
+    Context mapThymeleafVariables(Hospitalization hospitalization);
 }

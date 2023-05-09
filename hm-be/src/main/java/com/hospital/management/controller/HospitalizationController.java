@@ -8,13 +8,20 @@ import com.hospital.management.model.dto.appointment.AppointmentRequest;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.hospitalization.HospitalizationRequest;
+import com.hospital.management.service.implementation.HospitalizationExcelExporterService;
 import com.hospital.management.service.util.HospitalizationServiceUtil;
+import com.hospital.management.service.util.PDFGeneratorServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +30,12 @@ import java.util.Map;
 public class HospitalizationController {
     @Autowired
     HospitalizationServiceUtil hospitalizationService;
+
+    @Autowired
+    PDFGeneratorServiceUtil pdfGeneratorService;
+
+    @Value("${pdfGenerator.path}")
+    private String pdfGenerator;
 
     @SuppressWarnings("unchecked")
     @GetMapping
@@ -65,5 +78,36 @@ public class HospitalizationController {
             responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.getMessage());
             return ResponseEntity.internalServerError().body(responseMap);
         }
+    }
+
+    @GetMapping("/export-excel")
+    public ResponseEntity<?> exportExcelHospitalization(HttpServletResponse response,
+                                                        HospitalizationParams hospitalizationParams) {
+        Map<String, Object> responseMap;
+
+        try {
+            List<Hospitalization> hospitalizations = hospitalizationService.findByFilter(hospitalizationParams);
+            HospitalizationExcelExporterService hospitalizationExcelExporterService = new HospitalizationExcelExporterService(hospitalizations);
+            hospitalizationExcelExporterService.export(response);
+
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", "exported");
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
+    @GetMapping("/generate-hospitalization/{hospitalizationId}")
+    public ResponseEntity<?> generateHospitalization(@PathVariable(value = "hospitalizationId") Long hospitalizationId) throws DocumentException, IOException {
+        Map<String, Object> responseMap;
+        Hospitalization hospitalization = hospitalizationService.findByHospitalizationId(hospitalizationId);
+        Context context = hospitalizationService.mapThymeleafVariables(hospitalization);
+        String test = pdfGeneratorService.parseThymeleafTemplate("hospitalization", context);
+        String fileName = "invoice_" + hospitalizationId;
+        pdfGeneratorService.generatePdfFromHtml(test, fileName);
+        responseMap = ResponseUtils.createResponseMap(false, "success_msg", this.pdfGenerator + fileName + ".pdf");
+        return ResponseEntity.ok(responseMap);
     }
 }

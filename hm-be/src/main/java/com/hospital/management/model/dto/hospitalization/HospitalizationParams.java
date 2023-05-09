@@ -17,4 +17,5 @@ public class HospitalizationParams {
     private Date endDate;
     private Long doctorId;
     private String search;
+    private Long patientId;
 }

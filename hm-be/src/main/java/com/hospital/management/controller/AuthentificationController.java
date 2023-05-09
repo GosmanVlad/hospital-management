@@ -112,6 +112,12 @@ public class AuthentificationController {
             user.setEmail(request.getEmail());
             user.setRole(request.getRole());
             user.setCreatedDate(new Date());
+            user.setBirthdate(request.getBirthDate());
+            user.setCity(request.getCity());
+            user.setCountry(request.getCountry());
+            user.setHomeAddress(request.getHomeAddress());
+            user.setPersonalNumber(request.getPersonalNumber());
+            user.setPhone(request.getPhone());
             userService.save(user);
 
             UserDetails userDetails = userDetailsService.createUserDetails(user.getUsername(), user.getPassword());

@@ -25,9 +25,13 @@
     <v-row justify="end" class="modal">
         <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
-                <v-btn color="error" v-bind="props">
+                <v-btn color="green" @click="exportExcel" style="margin-right: 10px">
+                    Exporta excel
+                </v-btn>
+                <v-btn color="error" v-bind="props" v-if="role === 'DOCTOR'">
                     Adauga o internare
                 </v-btn>
+
             </template>
             <v-card>
                 <v-card-title>
@@ -115,7 +119,15 @@
                 <td>{{ formatDateWithoutHour(item.startDate) }}</td>
                 <td>{{ formatDateWithoutHour(item.endDate) }}</td>
                 <td>{{ item.doctorName }}</td>
-                <td>Todo: Download pdf</td>
+                <td>
+                    <div class="one-line">
+                        <span class="group pa-2 cursor" @click="generatePdf(item.hospitalizationId)">
+                            <v-tooltip activator="parent" location="top">Descarca internarea</v-tooltip>
+                            <v-icon>mdi-file-cabinet</v-icon>
+                        </span>
+
+                    </div>
+                </td>
             </tr>
         </tbody>
     </v-table>
@@ -233,8 +245,19 @@ export default {
                 search: ""
             }
             this.loadAllHospitalizations();
+        },
+        exportExcel() {
+            hospitalizationService.exportExcel(this.filters);
+        },
+        generatePdf(hospitalizationId) {
+            hospitalizationService.generatePdf(hospitalizationId);
         }
-    }
+    },
+    computed: {
+        role: function () {
+            return this.$store.getters.StateRole;
+        },
+    },
 }
 </script>
 <style scoped>

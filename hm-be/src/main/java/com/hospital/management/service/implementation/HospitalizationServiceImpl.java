@@ -16,9 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.thymeleaf.context.Context;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,5 +117,63 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
         hospitalization.setDiagnosis(hospitalizationRequest.getDiagnosis());
         hospitalization.setSalon(salon);
         hospitalizationRepository.save(hospitalization);
+    }
+
+    @Override
+    public List<Hospitalization> findByFilter(HospitalizationParams hospitalizationParams) {
+        Specification<Hospitalization> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (hospitalizationParams.getSearch() != null) {
+                Expression<String> searchExpresion = criteriaBuilder.concat(
+                        criteriaBuilder.concat(root.join("patient").get("lastName"), " "), root.join("patient").get("firstName"));
+                predicates.add(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(searchExpresion), "%" + hospitalizationParams.getSearch().toLowerCase() + "%")));
+            }
+
+            if (hospitalizationParams.getDoctorId() != null) {
+                predicates.add(criteriaBuilder.equal(root.join("employee").get("employeeId"), hospitalizationParams.getDoctorId()));
+            }
+
+            if (hospitalizationParams.getStartDate() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Hospitalization_.startDate), hospitalizationParams.getStartDate()));
+            }
+
+            if (hospitalizationParams.getEndDate() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(Hospitalization_.endDate), hospitalizationParams.getEndDate()));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+        };
+        return hospitalizationRepository.findAll(specification);
+    }
+
+    @Override
+    public Hospitalization findByHospitalizationId(Long hospitalizationId) {
+        return hospitalizationRepository.findByHospitalizationId(hospitalizationId);
+    }
+
+    @Override
+    public Context mapThymeleafVariables(Hospitalization hospitalization) {
+        Context context = new Context();
+        double[] totalValue = {0.0};
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        context.setVariable("hospitalizationId", hospitalization.getHospitalizationId());
+        context.setVariable("date", hospitalization.getStartDate());
+        context.setVariable("patient", hospitalization.getPatient().getFirstName() + " " + hospitalization.getPatient().getLastName());
+        context.setVariable("startDate", hospitalization.getStartDate());
+        context.setVariable("endDate", hospitalization.getEndDate());
+        context.setVariable("doctor", hospitalization.getDoctor().getUser().getFirstName() + " " + hospitalization.getDoctor().getUser().getLastName());
+        context.setVariable("department", hospitalization.getDepartment().getDepartmentName());
+        context.setVariable("diagnosis", hospitalization.getDiagnosis());
+        context.setVariable("cnp", hospitalization.getPatient().getPersonalNumber());
+        context.setVariable("birthDate", hospitalization.getPatient().getBirthdate());
+        context.setVariable("phone", hospitalization.getPatient().getPhone());
+        context.setVariable("country", hospitalization.getPatient().getCountry());
+        context.setVariable("city", hospitalization.getPatient().getCity());
+        context.setVariable("address", hospitalization.getPatient().getHomeAddress());
+        context.setVariable("doctorPhone", hospitalization.getDoctor().getUser().getPhone());
+        context.setVariable("department", hospitalization.getDoctor().getDepartment().getDepartmentName());
+        return context;
     }
 }
