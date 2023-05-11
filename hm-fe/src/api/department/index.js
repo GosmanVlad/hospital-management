@@ -9,9 +9,19 @@ const headers = {
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const departmentService = {
-    getDepartments
+    getDepartments,
+    removeDepartments,
+    saveDepartment
 };
 
 function getDepartments() {
     return axios.get(`${apiUrl}/departments`, { headers });
+}
+
+function removeDepartments(departmentId) {
+    return axios.delete(`${apiUrl}/departments/${departmentId}`, { headers });
+}
+
+function saveDepartment(data) {
+    return axios.post(`${apiUrl}/departments`, data, { headers });
 }

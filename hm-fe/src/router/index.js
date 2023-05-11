@@ -4,6 +4,7 @@ import Register from "../pages/Register.vue";
 import Activation from "../pages/Activation.vue";
 import Appointments from "../pages/Appointments";
 import Hospitalization from "../pages/Hospitalization";
+import Departments from "../pages/Departments";
 import Login from "../pages/Login.vue";
 import { appName } from "../consts"
 import store from "../store";
@@ -44,6 +45,11 @@ const router = createRouter({
             path: "/hospitalization",
             name: "hospitalization",
             component: Hospitalization,
+        },
+        {
+            path: "/departments",
+            name: "departments",
+            component: Departments,
         },
     ],
 });

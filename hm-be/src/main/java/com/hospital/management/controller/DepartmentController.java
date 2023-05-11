@@ -1,12 +1,11 @@
 package com.hospital.management.controller;
 
+import com.hospital.management.model.dto.department.DepartmentRequest;
 import com.hospital.management.service.util.DepartmentServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -22,6 +21,36 @@ public class DepartmentController {
 
         try {
             responseMap = ResponseUtils.createResponseMap(false, "success_msg", departmentService.findAll());
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
+    @DeleteMapping("/{departmentId}")
+    public ResponseEntity<?> deleteDepartment(@PathVariable(value = "departmentId") Long departmentId) {
+        Map<String, Object> responseMap;
+
+        try {
+            departmentService.delete(departmentId);
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", "");
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addDepartment(@RequestBody DepartmentRequest departmentRequest) {
+        Map<String, Object> responseMap;
+
+        try {
+            departmentService.add(departmentRequest);
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", "");
             return ResponseEntity.ok(responseMap);
         } catch (Exception e) {
             e.printStackTrace();

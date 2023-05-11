@@ -19,6 +19,9 @@
                 <v-list-item><router-link :to="'/hospitalization'" class="router-link-path">
                         Internari
                     </router-link></v-list-item>
+                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/departments'" class="router-link-path">
+                        Departamente
+                    </router-link></v-list-item>
             </div>
         </v-list>
     </v-navigation-drawer>
