@@ -1,12 +1,16 @@
 package com.hospital.management.controller;
 
+import com.hospital.management.model.dto.department.DepartmentImportRequest;
 import com.hospital.management.model.dto.department.DepartmentRequest;
 import com.hospital.management.service.util.DepartmentServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -57,6 +61,23 @@ public class DepartmentController {
             responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
             return ResponseEntity.internalServerError().body(responseMap);
         }
+    }
+
+    @PostMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> importDocs(@ModelAttribute DepartmentImportRequest importDTO) {
+
+        Map<String, Object> responseMap = new HashMap<>();
+        try {
+            departmentService.importFromCsv(importDTO);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            responseMap.put("error", true);
+            responseMap.put("message", exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+        responseMap.put("error", false);
+        responseMap.put("message", "XML files generated successfully!");
+        return ResponseEntity.ok(responseMap);
     }
 
 }

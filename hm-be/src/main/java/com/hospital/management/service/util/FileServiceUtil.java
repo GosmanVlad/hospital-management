@@ -9,4 +9,5 @@ public interface FileServiceUtil {
     String store(MultipartFile file, String path, String fileName);
 
     MediaType getMediaTypeForFileName(ServletContext servletContext, String fileName);
+    String createDirectoriesAndSaveFile(MultipartFile file);
 }

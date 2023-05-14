@@ -11,7 +11,8 @@ const apiUrl = process.env.VUE_APP_API_URL;
 export const departmentService = {
     getDepartments,
     removeDepartments,
-    saveDepartment
+    saveDepartment,
+    importDepartmentsFromCsv
 };
 
 function getDepartments() {
@@ -24,4 +25,12 @@ function removeDepartments(departmentId) {
 
 function saveDepartment(data) {
     return axios.post(`${apiUrl}/departments`, data, { headers });
+}
+
+function importDepartmentsFromCsv(csvFile) {
+    let formData = new FormData();
+
+    if (isNaN(csvFile) && !(typeof csvFile === 'string')) formData.append("doc", csvFile);
+
+    return axios.post(`${apiUrl}/departments/import`, formData);
 }
