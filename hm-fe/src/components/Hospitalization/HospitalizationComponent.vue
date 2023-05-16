@@ -53,11 +53,11 @@
                                 </Datepicker>
                             </v-col>
                             <v-col md="6">
-                                <v-select :items="this.patients"
+                                <v-autocomplete :items="this.patients"
                                     :item-title="(value) => value.firstName + ' ' + value.lastName" item-value="userId"
-                                    variant="underlined" v-model="this.data.patientId" ref="patient"
-                                    placeholder="Selecteaza pacient" label="Selecteaza pacient">
-                                </v-select>
+                                    single-line variant="underlined" append-inner-icon="mdi-magnify"
+                                    v-model="this.data.patientId" label="Selecteaza pacient"
+                                    placeholder="Selecteaza pacient"></v-autocomplete>
                             </v-col>
                             <v-col md="6">
                                 <v-select :items="this.salons" item-title="salonName" item-value="salonId"

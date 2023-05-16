@@ -53,12 +53,11 @@
                                 </v-select>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-select :items="this.employees"
+                                <v-autocomplete :items="this.employees"
                                     :item-title="(value) => value.user.firstName + ' ' + value.user.lastName"
-                                    item-value="employeeId" variant="underlined"
-                                    v-model="this.saveAppointmentBody.selectedEmployee" ref="doctor" placeholder="Doctor"
-                                    label="Selecteaza doctor">
-                                </v-select>
+                                    item-value="employeeId" single-line variant="underlined" append-inner-icon="mdi-magnify"
+                                    v-model="this.saveAppointmentBody.selectedEmployee" label="Selecteaza doctor"
+                                    placeholder="Doctor"></v-autocomplete>
                             </v-col>
 
                             <v-col cols="12">
