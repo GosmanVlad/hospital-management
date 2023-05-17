@@ -40,7 +40,7 @@ public class AppointmentController {
             responseMap = ResponseUtils.createResponseMap(false, "success_msg", new PageImpl<>(appointmentOutcomingDtos, pageable, appointments.getTotalElements()));
 
             if (appointments.isEmpty()) {
-                responseMap = ResponseUtils.createResponseMap(false, "list_is_empty.", null);
+                responseMap = ResponseUtils.createResponseMap(false, "no_appointments", null);
             }
 
             return ResponseEntity.ok(responseMap);

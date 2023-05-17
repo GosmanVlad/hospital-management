@@ -53,7 +53,7 @@ public class HospitalizationController {
             responseMap = ResponseUtils.createResponseMap(false, "success_msg", new PageImpl<>(hospitalizationOutcomingDtos, pageable, hospitalizations.getTotalElements()));
 
             if (hospitalizations.isEmpty()) {
-                responseMap = ResponseUtils.createResponseMap(false, "list_is_empty.", null);
+                responseMap = ResponseUtils.createResponseMap(false, "no_hospitalizations", null);
             }
 
             return ResponseEntity.ok(responseMap);

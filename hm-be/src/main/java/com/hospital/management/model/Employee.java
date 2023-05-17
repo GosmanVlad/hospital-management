@@ -30,4 +30,8 @@ public class Employee {
     @OneToMany(mappedBy = "doctor")
     @JsonIgnore
     private Collection<Hospitalization> hospitalizations;
+
+    @OneToMany(mappedBy = "employee")
+    @JsonIgnore
+    private Collection<Invoice> invoices;
 }

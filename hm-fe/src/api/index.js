@@ -6,3 +6,4 @@ export { hospitalizationService } from "./hospitalization/index";
 export { userService } from "./user/index";
 export { salonService } from "./salon/index";
 export { fileService } from "./file/index";
+export { invoiceService } from "./invoice/index";
