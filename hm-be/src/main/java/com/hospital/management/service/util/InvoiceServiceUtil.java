@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface InvoiceServiceUtil {
     Page<Invoice> findByFilter(InvoiceParams invoiceParams, Pageable pageable);
+    List<Invoice> findByFilter(InvoiceParams invoiceParams);
 
     List<?> mapEntityListToDtoList(Page<Invoice> invoices, Class<InvoiceOutcomingDto> invoiceOutcomingDtoClass);
 

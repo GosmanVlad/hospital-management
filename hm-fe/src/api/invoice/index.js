@@ -1,4 +1,6 @@
 import axios from "axios";
+import moment from "moment";
+
 const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -10,7 +12,8 @@ const apiUrl = process.env.VUE_APP_API_URL;
 
 export const invoiceService = {
     getInvoices,
-    addInvoice
+    addInvoice,
+    exportExcel
 };
 
 function getInvoices(filters, pagination) {
@@ -30,4 +33,30 @@ function getInvoices(filters, pagination) {
 
 function addInvoice(body) {
     return axios.post(`${apiUrl}/invoices/`, body, { headers });
+}
+
+function exportExcel(filters) {
+    let params = {
+        startDate: filters?.startDate,
+        endDate: filters?.endDate,
+        search: filters?.search
+    };
+    return axios.get(`${apiUrl}/invoices/export-excel`, { params: params, responseType: 'arraybuffer', headers: headers }).then((res) => {
+        const fileURL = window.URL.createObjectURL(new Blob([res.data]));
+        const fileLink = document.createElement("a");
+        const contentDisposition = res.headers["content-disposition"];
+        let fileName = "Invoices" + "_" + moment(filters?.startDate).format("YYYY-MM-DD") + "_" + moment(filters?.endDate).format("YYYY-MM-DD");
+
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+            if (fileNameMatch?.length === 2) fileName = fileNameMatch[1];
+        }
+
+        fileLink.href = fileURL;
+
+        fileLink.setAttribute("download", fileName + ".xlsx");
+        document.body.appendChild(fileLink);
+
+        fileLink.click();
+    })
 }

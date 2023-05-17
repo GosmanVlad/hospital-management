@@ -72,6 +72,38 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
     }
 
     @Override
+    public List<Invoice> findByFilter(InvoiceParams invoiceParams) {
+        Specification<Invoice> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (invoiceParams.getPatientId() != null) {
+                predicates.add(criteriaBuilder.equal(root.join("patient").get("userId"), invoiceParams.getPatientId()));
+            }
+
+            if (invoiceParams.getDoctorId() != null) {
+                predicates.add(criteriaBuilder.equal(root.join("employee").get("employeeId"), invoiceParams.getDoctorId()));
+            }
+
+            if (invoiceParams.getStartDate() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Invoice_.date), invoiceParams.getStartDate()));
+            }
+
+            if (invoiceParams.getEndDate() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(Invoice_.date), invoiceParams.getEndDate()));
+            }
+
+            if (invoiceParams.getSearch() != null) {
+                Expression<String> searchExpresion = criteriaBuilder.concat(
+                        criteriaBuilder.concat(root.join("patient").get("lastName"), " "), root.join("patient").get("firstName"));
+                predicates.add(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(searchExpresion), "%" + invoiceParams.getSearch().toLowerCase() + "%")));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+        };
+        return invoiceRepository.findAll(specification);
+    }
+
+    @Override
     public List<?> mapEntityListToDtoList(Page<Invoice> invoices, Class<InvoiceOutcomingDto> invoiceOutcomingDtoClass) {
         ModelMapper modelMapper = new ModelMapper();
 

@@ -8,6 +8,8 @@ import com.hospital.management.model.dto.hospitalization.HospitalizationRequest;
 import com.hospital.management.model.dto.invoice.InvoiceOutcomingDto;
 import com.hospital.management.model.dto.invoice.InvoiceParams;
 import com.hospital.management.model.dto.invoice.InvoiceRequest;
+import com.hospital.management.service.implementation.HospitalizationExcelExporterService;
+import com.hospital.management.service.implementation.InvoiceExcelExporterService;
 import com.hospital.management.service.util.InvoiceServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +66,25 @@ public class InvoiceController {
         } catch (Exception e) {
             e.printStackTrace();
             responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.getMessage());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
+    @GetMapping("/export-excel")
+    public ResponseEntity<?> exportExcelInvoices(HttpServletResponse response,
+                                                 InvoiceParams invoiceParams) {
+        Map<String, Object> responseMap;
+
+        try {
+            List<Invoice> invoices = invoiceService.findByFilter(invoiceParams);
+            InvoiceExcelExporterService invoiceExcelExporterService = new InvoiceExcelExporterService(invoices);
+            invoiceExcelExporterService.export(response);
+
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", "exported");
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
             return ResponseEntity.internalServerError().body(responseMap);
         }
     }
