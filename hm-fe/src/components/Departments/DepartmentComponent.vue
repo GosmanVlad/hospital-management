@@ -10,7 +10,7 @@
                 <v-row justify="end" class="modal">
                     <v-dialog v-model="dialog" persistent width="1024" height="500">
                         <template v-slot:activator="{ props }">
-                            <v-btn color="error" v-bind="props" style="margin-right:15px">
+                            <v-btn color="error" v-bind="props" style="margin-right:15px" density="compact">
                                 Adauga un departament
                             </v-btn>
                         </template>

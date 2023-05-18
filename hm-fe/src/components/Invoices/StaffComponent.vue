@@ -32,7 +32,7 @@
                 </v-form>
                 <span style="font-weight: bold"> Total generat facturi:</span> <span
                     style="font-weight: bold; color: green">{{ totalSumOfInvoice }} RON</span> <br />
-                <v-btn color="green" @click="exportExcel" style="margin-right: 10px;">
+                <v-btn color="green" @click="exportExcel" style="margin-right: 10px;" density="compact">
                     Exporta excel
                 </v-btn>
                 <v-progress-linear indeterminate color="red-darken-2" v-if="loading"></v-progress-linear>

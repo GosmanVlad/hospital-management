@@ -29,7 +29,7 @@
     <v-row justify="end" class="modal">
         <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
-                <v-btn color="error" v-bind="props">
+                <v-btn color="error" v-bind="props" density="compact">
                     Efectueaza o programare
                 </v-btn>
             </template>
@@ -53,7 +53,7 @@
                                 </v-select>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete :items="this.employees"
+                                <v-autocomplete :items="this.doctors"
                                     :item-title="(value) => value.user.firstName + ' ' + value.user.lastName"
                                     item-value="employeeId" single-line variant="underlined" append-inner-icon="mdi-magnify"
                                     v-model="this.saveAppointmentBody.selectedEmployee" label="Selecteaza doctor"

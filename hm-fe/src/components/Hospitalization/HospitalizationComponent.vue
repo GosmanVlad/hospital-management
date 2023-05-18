@@ -25,10 +25,10 @@
     <v-row justify="end" class="modal">
         <v-dialog v-model="dialog" persistent width="1024" height="500">
             <template v-slot:activator="{ props }">
-                <v-btn color="green" @click="exportExcel" style="margin-right: 10px">
+                <v-btn color="green" @click="exportExcel" style="margin-right: 10px" density="compact">
                     Exporta excel
                 </v-btn>
-                <v-btn color="error" v-bind="props" v-if="role === 'DOCTOR'">
+                <v-btn color="error" v-bind="props" v-if="role === 'DOCTOR'" density="compact">
                     Adauga o internare
                 </v-btn>
 
