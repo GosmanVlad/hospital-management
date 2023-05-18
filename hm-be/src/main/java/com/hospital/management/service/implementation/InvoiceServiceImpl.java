@@ -18,10 +18,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -150,5 +155,55 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
         }
         invoice.setInvoiceItems(invoiceItems);
         invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public Invoice findByInvoiceId(Long invoiceId) {
+        return invoiceRepository.findByInvoiceId(invoiceId);
+    }
+
+    @Override
+    public Context mapThymeleafVariables(Invoice invoice) {
+        Context context = new Context();
+        double[] totalValue = {0.0};
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        List<Context> invoiceItems = mapProductsThymeleafVariables(invoice, totalValue);
+
+        context.setVariable("invoiceNumber", invoice.getInvoiceId());
+        context.setVariable("invoiceDate", invoice.getDate());
+        context.setVariable("patientName", invoice.getPatient().getFirstName() + " " + invoice.getPatient().getLastName());
+        context.setVariable("patientPhoneNumber", invoice.getPatient().getPhone());
+        context.setVariable("patientCNP", invoice.getPatient().getPersonalNumber());
+        context.setVariable("invoiceItems", invoiceItems);
+        context.setVariable("bannerPath", "https://static.vecteezy.com/system/resources/thumbnails/000/490/784/small/cardio_logo_02.jpg");
+        context.setVariable("total", df.format(totalValue[0]) + " RON");
+        context.setVariable("doctorName", invoice.getEmployee().getUser().getFirstName() + " " + invoice.getEmployee().getUser().getLastName());
+        context.setVariable("doctorPhone", invoice.getEmployee().getUser().getPhone());
+        context.setVariable("doctorDepartment", invoice.getEmployee().getDepartment().getDepartmentName());
+        return context;
+    }
+
+    private List<Context> mapProductsThymeleafVariables(Invoice invoice, double[] totalValue) {
+        List<Context> invoiceItemsContext = new ArrayList<>();
+        double total = 0.0;
+        int number = 0;
+
+        Collection<InvoiceItem> invoiceItems = invoice.getInvoiceItems();
+        for (InvoiceItem item : invoiceItems) {
+            number++;
+            Context invoiceItemContext = new Context();
+
+            invoiceItemContext.setVariable("number", number);
+            invoiceItemContext.setVariable("service", item.getService());
+            invoiceItemContext.setVariable("value", item.getBrutCost());
+            invoiceItemContext.setVariable("valueTVA", (double) Math.round((double) invoice.getVatPercentage() / 100 * item.getBrutCost() * 100)/100);
+            invoiceItemContext.setVariable("tvaPercent", invoice.getVatPercentage() + "%");
+            invoiceItemsContext.add(invoiceItemContext);
+
+            total = total + item.getBrutCost();
+        }
+        totalValue[0] = total;
+        return invoiceItemsContext;
     }
 }

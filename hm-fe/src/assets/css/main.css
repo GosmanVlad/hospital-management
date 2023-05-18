@@ -52,3 +52,7 @@
 .auth-title {
   color: #9d152d;
 }
+
+.v-field__field {
+  background-color: white !important;
+}

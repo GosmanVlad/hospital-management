@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+<head>
+  <meta charset="ISO-8859-1" />
+  <title>Factura</title>
+  <style th:inline="text">
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      th {
+        background-color: #dcdcdc;
+        font-size: 12px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      td {
+        font-size: 12px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Tahoma, sans-serif;
+      }
+
+      .column {
+        float: left;
+        width: 33.3%;
+        padding: 0 10px;
+      }
+
+      p {
+        margin: 0 !important;
+      }
+
+      .row {
+        margin: 0 -5px;
+      }
+
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      @media screen and (max-width: 600px) {
+        .column {
+          width: 100%;
+          display: block;
+          margin-bottom: 60px;
+        }
+      }
+
+      .card {
+        font-size: 12px;
+        font-family: Tahoma, sans-serif;
+        padding: 0px;
+        text-align: left;
+        background-color: #ffffff;
+      }
+
+      .b {
+        text-align: justify;
+      }
+
+      .table-non-border,
+      .table-non-border td {
+        border-style: dotted;
+        width: 100%;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      .image {
+        width: 100%;
+      }
+
+      .center-block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+</head>
+
+<body>
+<div class="image">
+  <img th:src="@{|${bannerPath}|}" width="150" height="100"/>
+</div>
+<div class="center-block">
+  <div class="row">
+    <div class="column">
+      <div class="card">
+        <p th:text="'Doctor: ' + ${doctorName}"></p>
+        <p th:text="'Nr. telefon: ' + ${doctorPhone}"></p>
+        <p th:text="'Sectie: ' + ${doctorDepartment}"></p>
+        <p th:text="'Nr. facturii: ' + ${invoiceNumber}"></p>
+        <p th:text="'Data: ' + ${invoiceDate}"></p>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card">
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="b">
+          <h2>FACTURA FISCALA</h2>
+        </div>
+        <br />
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card">
+        <p th:text="'Pacient: ' + ${patientName}"></p>
+        <p th:text="'Nr. telefon: ' + ${patientPhoneNumber}"></p>
+        <p th:text="'CNP: ' + ${patientCNP}"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br />
+
+<table style="width: 100%;">
+  <tr>
+    <th>Nr. crt.</th>
+    <th>Denumirea produselor sau serviciilor</th>
+    <th>
+      Procent TVA
+    </th>
+    <th>
+      Pret unitar <br />
+      -RON-
+    </th>
+    <th>
+      Valoare<br />
+      TVA <br />
+      -RON-
+    </th>
+  </tr>
+  <tr th:each="invoice : ${invoiceItems}" style="font-size: 12px">
+    <td th:text="${invoice.number}"></td>
+    <td th:text="${invoice.service}"></td>
+    <td th:text="${invoice.tvaPercent}"></td>
+    <td th:text="${invoice.value}"></td>
+    <td th:text="${invoice.valueTVA}"></td>
+  </tr>
+  <tr style="font-size: 14px">
+    <td colspan="3">TOTAL</td>
+    <td colspan="2" th:text="${total}"></td>
+  </tr>
+</table>
+<br /><br /><br />
+<h2>Semnatura</h2>
+<p>.................</p>
+
+
+<br />
+</body>
+</html>

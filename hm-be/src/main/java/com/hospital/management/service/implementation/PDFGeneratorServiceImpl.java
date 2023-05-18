@@ -36,8 +36,8 @@ public class PDFGeneratorServiceImpl implements PDFGeneratorServiceUtil {
     }
 
     @Override
-    public String generatePdfFromHtml(String html, String fileName) throws FileNotFoundException, IOException, DocumentException {
-        String outputFolder = this.pdfGenerator + File.separator + fileName + ".pdf";
+    public String generatePdfFromHtml(String html, String fileName, String type) throws FileNotFoundException, IOException, DocumentException {
+        String outputFolder = this.pdfGenerator + File.separator + type + File.separator + fileName + ".pdf";
         OutputStream outputStream = new FileOutputStream(outputFolder);
         ITextRenderer renderer = new ITextRenderer();
 

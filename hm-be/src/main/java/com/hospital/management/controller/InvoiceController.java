@@ -11,13 +11,18 @@ import com.hospital.management.model.dto.invoice.InvoiceRequest;
 import com.hospital.management.service.implementation.HospitalizationExcelExporterService;
 import com.hospital.management.service.implementation.InvoiceExcelExporterService;
 import com.hospital.management.service.util.InvoiceServiceUtil;
+import com.hospital.management.service.util.PDFGeneratorServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +32,12 @@ public class InvoiceController {
 
     @Autowired
     InvoiceServiceUtil invoiceService;
+
+    @Autowired
+    PDFGeneratorServiceUtil pdfGeneratorService;
+
+    @Value("${pdfGenerator.path}")
+    private String pdfGenerator;
 
     @GetMapping
     public ResponseEntity<?> getInvoices(InvoiceParams invoiceParams) {
@@ -87,5 +98,18 @@ public class InvoiceController {
             responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
             return ResponseEntity.internalServerError().body(responseMap);
         }
+    }
+
+    @GetMapping("/generate-invoice/{invoiceId}")
+    public ResponseEntity<?> generateHospitalization(@PathVariable(value = "invoiceId") Long invoiceId) throws DocumentException, IOException {
+        Map<String, Object> responseMap;
+        Invoice invoice = invoiceService.findByInvoiceId(invoiceId);
+        Context context = invoiceService.mapThymeleafVariables(invoice);
+        String test = pdfGeneratorService.parseThymeleafTemplate("invoiceTemplate", context);
+        String fileName = "invoice_" + invoiceId;
+        String path = pdfGeneratorService.generatePdfFromHtml(test, fileName, "invoices");
+
+        responseMap = ResponseUtils.createResponseMap(false, "success_msg", this.pdfGenerator + "invoices/" + fileName + ".pdf");
+        return ResponseEntity.ok(responseMap);
     }
 }

@@ -113,6 +113,7 @@
 <script>
 import { invoiceService } from '@/api';
 import { snackbarColors } from "@/consts/colors";
+import { fileService } from '@/api';
 import AddInvoiceComponent from "@/components/Invoices/AddInvoiceComponent.vue";
 import moment from "moment";
 
@@ -151,6 +152,16 @@ export default {
             console.log("TEST")
             this.getInvoices();
         },
+        generatePdf(invoiceId) {
+            this.loading = true;
+            invoiceService.generatePdf(invoiceId).then((res) => {
+                this.downloadFile(res.data.result);
+                this.loading = false;
+            }).catch(() => this.loading = false);
+        },
+        downloadFile(filePath) {
+            fileService.download(filePath);
+        },
         getInvoices() {
             this.loading = true;
             this.tableData = [];
@@ -173,6 +184,7 @@ export default {
                         this.totalSumOfInvoice += item.brutCost;
                     })
                     this.tableData.push({
+                        invoiceId: invoice.invoiceId,
                         details: invoice,
                         totalInvoice: totalInvoice,
                         vatPercentage: invoice.vatPercentage,

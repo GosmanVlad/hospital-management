@@ -13,7 +13,8 @@ const apiUrl = process.env.VUE_APP_API_URL;
 export const invoiceService = {
     getInvoices,
     addInvoice,
-    exportExcel
+    exportExcel,
+    generatePdf
 };
 
 function getInvoices(filters, pagination) {
@@ -59,4 +60,8 @@ function exportExcel(filters) {
 
         fileLink.click();
     })
+}
+
+function generatePdf(invoiceId) {
+    return axios.get(`${apiUrl}/invoices/generate-invoice/${invoiceId}`, { headers })
 }
