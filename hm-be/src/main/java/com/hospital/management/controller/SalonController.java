@@ -3,10 +3,17 @@ package com.hospital.management.controller;
 import com.hospital.management.model.Salon;
 import com.hospital.management.model.dto.department.DepartmentImportRequest;
 import com.hospital.management.model.dto.department.DepartmentRequest;
+import com.hospital.management.model.dto.invoice.InvoiceOutcomingDto;
 import com.hospital.management.model.dto.salon.SalonImportRequest;
 import com.hospital.management.model.dto.salon.SalonRequest;
 import com.hospital.management.service.util.SalonServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +34,11 @@ public class SalonController {
     @Autowired
     SalonServiceUtil salonService;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = Salon.class))})})
     @GetMapping
     public ResponseEntity<?> getSalons(@RequestParam(required = false, name = "pagination", defaultValue = "false") Boolean pagination,
                                        @RequestParam(required = false, name = "page", defaultValue = "0") int page,
@@ -54,6 +66,7 @@ public class SalonController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @DeleteMapping("/{salonId}")
     public ResponseEntity<?> deleteSalon(@PathVariable(value = "salonId") Long salonId) {
         Map<String, Object> responseMap;
@@ -69,6 +82,7 @@ public class SalonController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping
     public ResponseEntity<?> addSalon(@RequestBody SalonRequest salonRequest) {
         Map<String, Object> responseMap;
@@ -84,6 +98,7 @@ public class SalonController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> importDocs(@ModelAttribute SalonImportRequest importDTO) {
 

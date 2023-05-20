@@ -8,6 +8,12 @@ import com.hospital.management.model.dto.appointment.AppointmentParams;
 import com.hospital.management.model.dto.appointment.AppointmentRequest;
 import com.hospital.management.service.util.AppointmentServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +30,11 @@ public class AppointmentController {
     @Autowired
     AppointmentServiceUtil appointmentService;
 
+    @Operation(summary = "Brings the appointments according to the parameters ", security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = AppointmentOutcomingDto.class))})})
     @SuppressWarnings("unchecked")
     @GetMapping
     public ResponseEntity<?> getAppointments(AppointmentParams appointmentParams) {
@@ -51,6 +62,7 @@ public class AppointmentController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping
     public ResponseEntity<?> createAppointment(@RequestBody AppointmentRequest appointmentRequest) {
         Map<String, Object> responseMap;
@@ -72,6 +84,7 @@ public class AppointmentController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/{appointmentId}/{status}")
     public ResponseEntity<?> updateStatus(@PathVariable(value = "appointmentId") Long appointmentId,
                                           @PathVariable(value = "status") String status) {

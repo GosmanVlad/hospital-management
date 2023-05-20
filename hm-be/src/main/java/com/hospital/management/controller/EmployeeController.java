@@ -1,8 +1,15 @@
 package com.hospital.management.controller;
 
 import com.hospital.management.model.Employee;
+import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.service.util.EmployeeServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +27,11 @@ public class EmployeeController {
     @Autowired
     EmployeeServiceUtil employeeService;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = Employee.class))})})
     @GetMapping("/departments/{departmentId}")
     public ResponseEntity<?> getEmployeeByDepartmentId(@PathVariable(value = "departmentId") Long departmentId) {
         Map<String, Object> responseMap;
@@ -34,6 +46,11 @@ public class EmployeeController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = Employee.class))})})
     @GetMapping
     public ResponseEntity<?> getEmployees(@RequestParam(required = false, name = "pagination", defaultValue = "false") Boolean pagination,
                                           @RequestParam(required = false, name = "page", defaultValue = "0") int page,

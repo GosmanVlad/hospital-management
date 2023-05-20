@@ -14,6 +14,12 @@ import com.hospital.management.service.util.InvoiceServiceUtil;
 import com.hospital.management.service.util.PDFGeneratorServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import com.lowagie.text.DocumentException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
@@ -39,6 +45,11 @@ public class InvoiceController {
     @Value("${pdfGenerator.path}")
     private String pdfGenerator;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = InvoiceOutcomingDto.class))})})
     @GetMapping
     public ResponseEntity<?> getInvoices(InvoiceParams invoiceParams) {
         Map<String, Object> responseMap;
@@ -65,6 +76,7 @@ public class InvoiceController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping
     public ResponseEntity<?> createInvoice(@RequestBody InvoiceRequest invoiceRequest) {
         Map<String, Object> responseMap;
@@ -81,6 +93,7 @@ public class InvoiceController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/export-excel")
     public ResponseEntity<?> exportExcelInvoices(HttpServletResponse response,
                                                  InvoiceParams invoiceParams) {
@@ -100,6 +113,7 @@ public class InvoiceController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/generate-invoice/{invoiceId}")
     public ResponseEntity<?> generateHospitalization(@PathVariable(value = "invoiceId") Long invoiceId) throws DocumentException, IOException {
         Map<String, Object> responseMap;
@@ -113,6 +127,7 @@ public class InvoiceController {
         return ResponseEntity.ok(responseMap);
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/status/{invoiceId}/{status}")
     public ResponseEntity<?> updateStatus(@PathVariable(value = "invoiceId") Long invoiceId,
                                           @PathVariable(value = "status") String status) {

@@ -1,6 +1,7 @@
 package com.hospital.management.controller;
 
 import com.hospital.management.model.Hospitalization;
+import com.hospital.management.model.Salon;
 import com.hospital.management.model.User;
 import com.hospital.management.model.dto.department.DepartmentImportRequest;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
@@ -8,6 +9,12 @@ import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.people.PeopleRequestImport;
 import com.hospital.management.service.util.UserServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -26,6 +33,11 @@ public class UserController {
     @Autowired
     UserServiceUtil userService;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = User.class))})})
     @GetMapping("/patients")
     public ResponseEntity<?> getPatients(@RequestParam(required = false, name = "pagination", defaultValue = "false") Boolean pagination,
                                          @RequestParam(required = false, name = "page", defaultValue = "0") int page,
@@ -57,6 +69,7 @@ public class UserController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping(value = "/import", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> importDocs(@ModelAttribute PeopleRequestImport importDTO) {
 

@@ -2,6 +2,7 @@ package com.hospital.management.controller;
 
 import com.hospital.management.exception.appointment.AppointmentFieldsException;
 import com.hospital.management.exception.appointment.AppointmentOverlapException;
+import com.hospital.management.model.Employee;
 import com.hospital.management.model.Hospitalization;
 import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.model.dto.appointment.AppointmentRequest;
@@ -13,6 +14,12 @@ import com.hospital.management.service.util.HospitalizationServiceUtil;
 import com.hospital.management.service.util.PDFGeneratorServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import com.lowagie.text.DocumentException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
@@ -37,6 +44,11 @@ public class HospitalizationController {
     @Value("${pdfGenerator.path}")
     private String pdfGenerator;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = HospitalizationOutcomingDto.class))})})
     @SuppressWarnings("unchecked")
     @GetMapping
     public ResponseEntity<?> getHospitalizations(HospitalizationParams hospitalizationParams) {
@@ -64,6 +76,7 @@ public class HospitalizationController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping
     public ResponseEntity<?> createHospitalization(@RequestBody HospitalizationRequest hospitalizationRequest) {
         Map<String, Object> responseMap;
@@ -80,6 +93,7 @@ public class HospitalizationController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/export-excel")
     public ResponseEntity<?> exportExcelHospitalization(HttpServletResponse response,
                                                         HospitalizationParams hospitalizationParams) {
@@ -99,6 +113,7 @@ public class HospitalizationController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/generate-hospitalization/{hospitalizationId}")
     public ResponseEntity<?> generateHospitalization(@PathVariable(value = "hospitalizationId") Long hospitalizationId) throws DocumentException, IOException {
         Map<String, Object> responseMap;

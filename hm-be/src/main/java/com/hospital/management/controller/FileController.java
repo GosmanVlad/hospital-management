@@ -1,6 +1,8 @@
 package com.hospital.management.controller;
 
 import com.hospital.management.service.util.FileServiceUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,7 @@ public class FileController {
     @Autowired
     private ServletContext servletContext;
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping
     public ResponseEntity<InputStreamResource> downloadFile(@RequestParam(required = true, name = "file") String fileName)  throws IOException {
         MediaType mediaType = fileUploadService.getMediaTypeForFileName(this.servletContext, fileName);

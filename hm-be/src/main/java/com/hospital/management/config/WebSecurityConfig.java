@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/auth/*").permitAll()
                 .antMatchers("/images/**", "/images/*").permitAll()
+                .antMatchers("/api-docs/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(((request, response, authException) -> {
                     Map<String, Object> responseMap = new HashMap<>();

@@ -11,6 +11,8 @@ import com.hospital.management.service.implementation.UserDetailsServiceImpl;
 import com.hospital.management.service.util.DepartmentServiceUtil;
 import com.hospital.management.service.util.EmployeeServiceUtil;
 import com.hospital.management.service.util.UserServiceUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -56,6 +58,7 @@ public class AuthentificationController {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) throws JSONException  {
 
@@ -103,6 +106,7 @@ public class AuthentificationController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         Map<String, Object> responseMap = new HashMap<>();
@@ -151,6 +155,7 @@ public class AuthentificationController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PutMapping("/change-password/{userId}")
     public ResponseEntity<?> changePassword(@PathVariable(value = "userId") Long userId,
                                             @RequestBody ChangePasswordRequest request) {
