@@ -11,25 +11,26 @@
         <v-list v-if="!rail && isLoggedIn" class="main-nav-container">
             <div v-if="!rail">
                 <v-list-item><router-link :to="'/'" class="router-link-path">
-                        Dashboard
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-view-dashboard</v-icon> Dashboard
                     </router-link></v-list-item>
                 <v-list-item><router-link :to="'/appointments'" class="router-link-path">
-                        Programari
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-file-document-multiple</v-icon> Programari
                     </router-link></v-list-item>
                 <v-list-item><router-link :to="'/hospitalization'" class="router-link-path">
-                        Internari
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-hospital-building</v-icon> Internari
                     </router-link></v-list-item>
                 <v-list-item><router-link :to="'/invoices'" class="router-link-path">
-                        Facturi
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-receipt-text-edit</v-icon> Facturi
                     </router-link></v-list-item>
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/people'" class="router-link-path">
-                        Personal si pacienti
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-account-details</v-icon> Personal si
+                        pacienti
                     </router-link></v-list-item>
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/salons'" class="router-link-path">
-                        Saloane
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-bed</v-icon> Saloane
                     </router-link></v-list-item>
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/departments'" class="router-link-path">
-                        Departamente
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-office-building</v-icon>Departamente
                     </router-link></v-list-item>
             </div>
         </v-list>

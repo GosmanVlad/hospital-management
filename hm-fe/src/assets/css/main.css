@@ -27,7 +27,11 @@
 }
 
 .v-navigation-drawer__content {
-  background-color: #c9c9c9;
+  background-color: #f1eded;
+}
+
+.router-link-path:hover {
+  color: #777777;
 }
 
 .navigation-drawer-main {
