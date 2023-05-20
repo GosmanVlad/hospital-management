@@ -11,7 +11,7 @@
                 </v-btn>
             </router-link>
             <router-link :to="'/login'" class="link-style" v-if="isLoggedIn" style="padding-top:4px">
-                <v-btn flat color="info" @click.prevent="logout">
+                <v-btn flat color="info" @click.prevent="logout" style="color: white !important;">
                     Log Out
                 </v-btn>
             </router-link>
