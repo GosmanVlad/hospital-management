@@ -1,8 +1,11 @@
 <template>
-    Test
+    <DashboardComponent />
 </template>
 <script>
+import DashboardComponent from "@/components/DashboardComponent.vue";
+
 export default {
-    name: "HomePage"
+    name: "HomePage",
+    components: { DashboardComponent }
 }
 </script>

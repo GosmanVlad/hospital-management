@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import VueGoogleCharts from "vue3-googl-chart";
 
 loadFonts()
 
@@ -22,5 +23,6 @@ createApp(App)
   .use(vuetify)
   .use(router)
   .use(store)
+  .use(VueGoogleCharts)
   .component('Datepicker', VueDatePicker)
   .mount('#app')

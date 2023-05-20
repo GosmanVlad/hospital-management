@@ -6,7 +6,7 @@
         <v-spacer></v-spacer>
         <div id="containerTransition" class="text-left profileContainer">
             <router-link :to="'/login'" class="link-style" v-if="!isLoggedIn">
-                <v-btn flat color="info" @click.prevent="logout">
+                <v-btn flat color="info" @click.prevent="logout" style="color: white !important;">
                     Autentificare
                 </v-btn>
             </router-link>
