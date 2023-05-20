@@ -31,8 +31,12 @@ function getHospitalization(filters, pagination) {
     let params = {
         startDate: filters?.startDate,
         endDate: filters?.endDate,
-        search: filters?.search
+        search: filters?.search,
     };
+
+    if (filters.patientId) {
+        params = { ...params, patientId: filters.patientId };
+    }
     return axios.get(`${apiUrl}/hospitalizations/${pagFilters}`, { params: params }, { headers });
 }
 

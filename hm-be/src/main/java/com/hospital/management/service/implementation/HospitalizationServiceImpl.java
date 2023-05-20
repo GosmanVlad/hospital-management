@@ -60,6 +60,10 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
                 predicates.add(criteriaBuilder.equal(root.join("employee").get("employeeId"), hospitalizationParams.getDoctorId()));
             }
 
+            if (hospitalizationParams.getPatientId() != null) {
+                predicates.add(criteriaBuilder.equal(root.join("patient").get("userId"), hospitalizationParams.getPatientId()));
+            }
+
             if (hospitalizationParams.getStartDate() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Hospitalization_.startDate), hospitalizationParams.getStartDate()));
             }

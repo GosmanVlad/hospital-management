@@ -32,7 +32,7 @@
                             style="margin-left:10px">Sterge</v-btn>
                     </v-col>
                 </v-row>
-                <v-progress-linear indeterminate color="red-darken-2" v-if="loading"></v-progress-linear>
+                <v-progress-linear indeterminate color="red-darken-2" v-if="loadingStaff"></v-progress-linear>
                 <v-table density="compact">
                     <thead class="table-header">
                         <tr>
@@ -102,6 +102,7 @@
                             style="margin-left:10px">Sterge</v-btn>
                     </v-col>
                 </v-row>
+                <v-progress-linear indeterminate color="red-darken-2" v-if="loadingPatients"></v-progress-linear>
                 <v-table density="compact">
                     <thead class="table-header">
                         <tr>
@@ -158,6 +159,7 @@
             </v-window-item>
 
             <v-window-item value="three">
+                <v-progress-linear indeterminate color="red-darken-2" v-if="loading"></v-progress-linear>
                 <v-form ref="csvForm">
                     <v-file-input label="Importa departamente din csv" @change="selectCSV"></v-file-input>
                     <v-btn color="green" variant="text" @click="downloadFile(templatePath)">
@@ -197,6 +199,7 @@ export default {
     data: () => ({
         tab: null,
         loadingPatients: false,
+        loadingStaff: false,
         templatePath: "E:/hm/documents/people/model/import-model.csv",
         patients: [],
         pagination: {
@@ -250,7 +253,7 @@ export default {
                 this.pagination.totalPages = res.data.result.totalPages;
                 this.pagination.totalElements = res.data.result.totalElements;
                 this.loadingPatients = false;
-            })
+            }).catch(() => this.loadingPatients = false)
         },
         loadStaff() {
             this.loadingStaff = true;
@@ -259,7 +262,7 @@ export default {
                 this.paginationStaff.totalPages = res.data.result.totalPages;
                 this.paginationStaff.totalElements = res.data.result.totalElements;
                 this.loadingStaff = false;
-            })
+            }).catch(() => this.loadingStaff = false)
 
         },
         loadDoctorsNomenclature() {

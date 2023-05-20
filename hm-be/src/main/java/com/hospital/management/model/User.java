@@ -25,6 +25,8 @@ public class User {
     private Date modifiedDate;
     private String createdBy;
     private String modifiedBy;
+
+    @JsonIgnore
     private String password;
     private String role;
     private boolean activated;

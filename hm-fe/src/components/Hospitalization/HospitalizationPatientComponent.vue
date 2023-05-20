@@ -77,6 +77,7 @@ export default {
         loadAllHospitalizations() {
             this.loading = true;
 
+            this.filters.patientId = this.$store.getters.StateUserId;
             hospitalizationService.getHospitalization(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;
                 this.pagination.totalPages = res.data.result.totalPages;

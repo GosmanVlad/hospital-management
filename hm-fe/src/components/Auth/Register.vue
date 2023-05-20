@@ -18,6 +18,10 @@
                     v-model="form.birtDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
                 </Datepicker><br />
                 <v-select label="Select" v-model="form.role" :items="['NURSE', 'DOCTOR', 'PATIENT']"></v-select>
+                <v-select :items="this.departments" item-title="departmentName" item-value="departmentId"
+                    variant="underlined" v-model="this.form.departmentId" ref="department" placeholder="department"
+                    label="Selecteaza departament" v-if="form.role !== 'PATIENT'">
+                </v-select>
                 <div class="auth-footer-section">
                     <v-btn type="submit" variant="outlined" color="error" block class="mt-2"
                         @click.prevent="register">Inregistrare</v-btn>
@@ -27,11 +31,13 @@
     </div>
 </template>
 <script>
+import { departmentService } from '@/api';
 import { mapActions } from "vuex";
 export default {
     name: 'register-page',
     data: () => ({
         valid: false,
+        departments: [],
         form: {
             firstName: "",
             lastName: "",
@@ -43,18 +49,27 @@ export default {
             homeAddress: "",
             city: "",
             county: "",
-            birtDate: undefined
+            birtDate: undefined,
+            departmentId: undefined
         },
     }),
+    mounted() {
+        this.getDepartments();
+    },
     methods: {
         ...mapActions(["Register"]),
         async register() {
             try {
                 await this.Register(this.form);
-                this.$router.push("/");
+                this.$router.push("/people");
             } catch (error) {
                 console.log(error);
             }
+        },
+        getDepartments() {
+            departmentService.getDepartments().then((res) => {
+                this.departments = res.data.result;
+            })
         },
     }
 }
