@@ -18,4 +18,5 @@ public class InvoiceParams {
     private Long doctorId;
     private String search;
     private Long patientId;
+    private String status;
 }

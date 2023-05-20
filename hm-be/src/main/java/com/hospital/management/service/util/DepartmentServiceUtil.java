@@ -16,4 +16,5 @@ public interface DepartmentServiceUtil {
 
     void importFromCsv(DepartmentImportRequest importDTO) throws Exception;
 
+    Department findByDepartmentId(Long departmentId);
 }

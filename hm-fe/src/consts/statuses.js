@@ -6,5 +6,11 @@ const appointmentStatus = [
     { key: 'canceled', value: "Anulat" },
     { key: 'solved', value: "Rezolvat" },];
 
+const invoiceStatus = [
+    { key: '', value: "Toate" },
+    { key: 'unpaid', value: "Neplatita" },
+    { key: 'paid', value: "Platita" },
+    { key: 'canceled', value: "Anulata" }];
 
-export { appointmentStatus }
+
+export { appointmentStatus, invoiceStatus }

@@ -17,4 +17,5 @@ public class InvoiceOutcomingDto {
     private String lastNamePatient;
     private List<InvoiceItem> invoiceItems;
     private Long vatPercentage;
+    private String status;
 }

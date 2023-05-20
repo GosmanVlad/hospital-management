@@ -11,14 +11,20 @@
                         <v-col md="3" style="padding-top:16px;">
                             <v-text-field label="Cauta numele pacientului" v-model="this.filters.search"></v-text-field>
                         </v-col>
-                        <v-col md="3">
-                            <label>Data internarii</label>
+                        <v-col md="2">
+                            <v-select :items="this.statuses" item-title="value" item-value="key" variant="underlined"
+                                v-model="this.filters.status" ref="statusbar" placeholder="status" label="Selecteaza status"
+                                v-on:keyup.enter="getInvoices()" style="margin-top:13px">
+                            </v-select>
+                        </v-col>
+                        <v-col md="2">
+                            <label>Data start</label>
                             <Datepicker required autoApply valueType="format" enableTimePicker="false" id="startDate"
                                 v-model="this.filters.startDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
                             </Datepicker>
                         </v-col>
-                        <v-col md="3">
-                            <label>Data externarii</label>
+                        <v-col md="2">
+                            <label>Data final</label>
                             <Datepicker required autoApply valueType="format" enableTimePicker="false" id="endDate"
                                 v-model="this.filters.endDate" format="dd.MM.yyyy" modelType="yyyy-MM-dd">
                             </Datepicker>
@@ -61,6 +67,9 @@
                                 Incasat
                             </th>
                             <th class="text-left">
+                                Status
+                            </th>
+                            <th class="text-left">
                                 Actiuni
                             </th>
                         </tr>
@@ -74,11 +83,29 @@
                             <td>{{ item.totalInvoice }} RON</td>
                             <td>{{ item.vatPercentage }}% ({{ item.vatTax }} RON)</td>
                             <td style="color: green; font-weight: bold">{{ item.totalInvoice - item.vatTax }} RON</td>
+                            <td><v-chip class="ma-2" :color="getStatusColour(item.status)" text-color="white">
+                                    {{ getStatusLabel(item.status) }}
+                                </v-chip></td>
                             <td>
                                 <div class="one-line">
                                     <span class="group pa-2 cursor" @click="generatePdf(item.invoiceId)">
                                         <v-tooltip activator="parent" location="top">Descarca factura</v-tooltip>
                                         <v-icon>mdi-file-cabinet</v-icon>
+                                    </span>
+                                    <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'paid')"
+                                        v-if="item.status === 'unpaid' || item.status === 'canceled'">
+                                        <v-tooltip activator="parent" location="top">Marcheaza ca platit</v-tooltip>
+                                        <v-icon>mdi-receipt-text-check-outline</v-icon>
+                                    </span>
+                                    <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'unpaid')"
+                                        v-if="item.status === 'paid' || item.status === 'canceled'">
+                                        <v-tooltip activator="parent" location="top">Marcheaza ca neplatit</v-tooltip>
+                                        <v-icon>mdi-receipt-text-clock</v-icon>
+                                    </span>
+                                    <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'canceled')"
+                                        v-if="item.status === 'paid' || item.status === 'unpaid'">
+                                        <v-tooltip activator="parent" location="top">Marcheaza ca anulata</v-tooltip>
+                                        <v-icon>mdi-cancel</v-icon>
                                     </span>
                                 </div>
                             </td>
@@ -88,7 +115,7 @@
 
                 <div class="text-center">
                     <v-pagination v-model="this.pagination.page" :length="this.pagination.totalPages"
-                        @update:modelValue="loadAllHospitalizations()" total-visible="10"></v-pagination>
+                        @update:modelValue="getInvoices()" total-visible="10"></v-pagination>
                 </div>
             </v-window-item>
 
@@ -114,6 +141,7 @@
 import { invoiceService } from '@/api';
 import { snackbarColors } from "@/consts/colors";
 import { fileService } from '@/api';
+import { invoiceStatus } from "@/consts/statuses";
 import AddInvoiceComponent from "@/components/Invoices/AddInvoiceComponent.vue";
 import moment from "moment";
 
@@ -132,7 +160,8 @@ export default {
         filters: {
             startDate: undefined,
             endDate: undefined,
-            search: ""
+            search: "",
+            status: ""
         },
         snackbar: {
             status: "",
@@ -141,7 +170,8 @@ export default {
             color: snackbarColors.error
         },
         tableData: [],
-        totalSumOfInvoice: 0
+        totalSumOfInvoice: 0,
+        statuses: invoiceStatus,
     }),
     mounted() {
         this.getInvoices();
@@ -149,7 +179,6 @@ export default {
     methods: {
         refreshTab() {
             this.tab = "one";
-            console.log("TEST")
             this.getInvoices();
         },
         generatePdf(invoiceId) {
@@ -184,6 +213,7 @@ export default {
                         this.totalSumOfInvoice += item.brutCost;
                     })
                     this.tableData.push({
+                        status: invoice.status,
                         invoiceId: invoice.invoiceId,
                         details: invoice,
                         totalInvoice: totalInvoice,
@@ -212,10 +242,30 @@ export default {
             this.filters = {
                 startDate: undefined,
                 endDate: undefined,
-                search: ""
+                search: "",
+                status: ""
             }
             this.getInvoices();
         },
+
+        getStatusColour(status) {
+            console.log("Status", status);
+            if (status === 'unpaid')
+                return 'error';
+            if (status === 'paid')
+                return 'green'
+            if (status === 'canceled')
+                return 'gray'
+            return '';
+        },
+        getStatusLabel(status) {
+            const stats = this.statuses.find((x) => x.key === status);
+            return stats?.value || "Unknown";
+        },
+
+        updateStatus(invoiceId, status) {
+            invoiceService.updateStatus(invoiceId, status).then(() => this.getInvoices());
+        }
     },
 }
 </script>

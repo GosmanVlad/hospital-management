@@ -10,7 +10,8 @@ const apiUrl = process.env.VUE_APP_API_URL;
 
 export const employeeService = {
     getEmployeeByDepartmentId,
-    getDoctors
+    getDoctors,
+    getEmployeesWithPagination
 };
 
 function getEmployeeByDepartmentId(departmentId) {
@@ -19,4 +20,21 @@ function getEmployeeByDepartmentId(departmentId) {
 
 function getDoctors() {
     return axios.get(`${apiUrl}/employees`, { headers });
+}
+
+function getEmployeesWithPagination(filters, pagination) {
+
+    let pagFilters = "";
+
+    if (pagination) {
+        pagFilters = `?page=${pagination.page - 1}&size=${pagination.size}&pagination=true`
+    }
+
+    let params = {
+        role: filters?.role,
+        employeeId: filters?.employeeId
+    };
+
+    console.log("Filters", filters);
+    return axios.get(`${apiUrl}/employees/${pagFilters}`, { params: params }, { headers });
 }

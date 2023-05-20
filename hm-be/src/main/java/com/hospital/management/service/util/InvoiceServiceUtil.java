@@ -21,4 +21,6 @@ public interface InvoiceServiceUtil {
     Invoice findByInvoiceId(Long invoiceId);
 
     Context mapThymeleafVariables(Invoice invoice);
+
+    void updateStatus(Long invoiceId, String status);
 }

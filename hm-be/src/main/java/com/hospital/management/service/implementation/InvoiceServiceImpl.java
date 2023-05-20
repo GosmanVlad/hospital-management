@@ -1,5 +1,6 @@
 package com.hospital.management.service.implementation;
 
+import com.hospital.management.constant.InvoiceStatus;
 import com.hospital.management.model.*;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.invoice.InvoiceOutcomingDto;
@@ -48,6 +49,10 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
     public Page<Invoice> findByFilter(InvoiceParams invoiceParams, Pageable pageable) {
         Specification<Invoice> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            if (!invoiceParams.getStatus().equals("")) {
+                predicates.add(criteriaBuilder.equal(root.get(Invoice_.status), invoiceParams.getStatus()));
+            }
 
             if (invoiceParams.getPatientId() != null) {
                 predicates.add(criteriaBuilder.equal(root.join("patient").get("userId"), invoiceParams.getPatientId()));
@@ -127,6 +132,7 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
         Invoice invoice = new Invoice();
         invoice.setDate(invoiceRequest.getDate());
         invoice.setVatPercentage(invoiceRequest.getVatPercentage());
+        invoice.setStatus(InvoiceStatus.UNPAID);
 
         Employee doctor = employeeRepository.findByEmployeeId(invoiceRequest.getDoctorId());
         if(doctor != null) {
@@ -182,6 +188,11 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
         context.setVariable("doctorPhone", invoice.getEmployee().getUser().getPhone());
         context.setVariable("doctorDepartment", invoice.getEmployee().getDepartment().getDepartmentName());
         return context;
+    }
+
+    @Override
+    public void updateStatus(Long invoiceId, String status) {
+        invoiceRepository.updateStatus(invoiceId, status);
     }
 
     private List<Context> mapProductsThymeleafVariables(Invoice invoice, double[] totalValue) {

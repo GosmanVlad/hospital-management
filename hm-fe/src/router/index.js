@@ -7,6 +7,7 @@ import Hospitalization from "../pages/Hospitalization";
 import Departments from "../pages/Departments";
 import Invoices from "../pages/Invoices";
 import Login from "../pages/Login.vue";
+import People from "../pages/People.vue";
 import { appName } from "../consts"
 import store from "../store";
 
@@ -56,6 +57,11 @@ const router = createRouter({
             path: "/invoices",
             name: "invoices",
             component: Invoices,
+        },
+        {
+            path: "/people",
+            name: "people",
+            component: People,
         },
     ],
 });

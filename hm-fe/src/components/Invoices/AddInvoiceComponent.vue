@@ -117,6 +117,15 @@ export default {
                     color: snackbarColors.success,
                     message: "Factura a fost creata!",
                 }
+
+                this.invoiceDate = undefined;
+                this.invoiceItems = [
+                    {
+                        service: "",
+                        brutCost: 0,
+                    }
+                ];
+                this.vatPercentage = 0;
                 this.$emit('invoice-added', 'true');
             }).catch((err) => {
                 this.snackbar = {

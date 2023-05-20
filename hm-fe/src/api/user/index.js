@@ -10,8 +10,30 @@ const apiUrl = process.env.VUE_APP_API_URL;
 
 export const userService = {
     getAllPatients,
+    getAllPatientsWithPagination,
+    importPeople
 };
 
 function getAllPatients() {
     return axios.get(`${apiUrl}/users/patients`, { headers });
+}
+
+function getAllPatientsWithPagination(filters, pagination) {
+    let pagFilters = "";
+
+    if (pagination) {
+        pagFilters = `?page=${pagination.page - 1}&size=${pagination.size}&pagination=true`
+    }
+    let params = {
+        userId: filters?.userId
+    };
+    return axios.get(`${apiUrl}/users/patients/${pagFilters}`, { params: params }, { headers });
+}
+
+function importPeople(csvFile) {
+    let formData = new FormData();
+
+    if (isNaN(csvFile) && !(typeof csvFile === 'string')) formData.append("doc", csvFile);
+
+    return axios.post(`${apiUrl}/users/import`, formData);
 }

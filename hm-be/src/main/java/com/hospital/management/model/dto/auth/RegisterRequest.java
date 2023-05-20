@@ -28,4 +28,5 @@ public class RegisterRequest {
     private String homeAddress;
     private String city;
     private String country;
+    private Long departmentId;
 }

@@ -129,7 +129,6 @@ export default {
     },
     methods: {
         selectCSV(event) {
-            console.log(event);
             this.csvFile = event.target.files[0];
         },
         resetFileInput() {

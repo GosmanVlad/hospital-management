@@ -55,6 +55,11 @@ public class DepartmentServiceImpl implements DepartmentServiceUtil {
         }
     }
 
+    @Override
+    public Department findByDepartmentId(Long departmentId) {
+        return departmentRepository.findByDepartmentId(departmentId);
+    }
+
     public List<DepartmentCsvLayout> readFile(File csvFile) throws Exception {
         List<DepartmentCsvLayout> beans = new CsvToBeanBuilder(new FileReader(csvFile))
                 .withType(DepartmentCsvLayout.class)

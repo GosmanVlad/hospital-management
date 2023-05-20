@@ -14,7 +14,8 @@ export const invoiceService = {
     getInvoices,
     addInvoice,
     exportExcel,
-    generatePdf
+    generatePdf,
+    updateStatus
 };
 
 function getInvoices(filters, pagination) {
@@ -27,8 +28,13 @@ function getInvoices(filters, pagination) {
     let params = {
         startDate: filters?.startDate,
         endDate: filters?.endDate,
-        search: filters?.search
+        search: filters?.search,
+        status: filters?.status
     };
+
+    if (filters?.patientId)
+        params = { ...params, patientId: filters.patientId };
+
     return axios.get(`${apiUrl}/invoices/${pagFilters}`, { params: params }, { headers });
 }
 
@@ -64,4 +70,8 @@ function exportExcel(filters) {
 
 function generatePdf(invoiceId) {
     return axios.get(`${apiUrl}/invoices/generate-invoice/${invoiceId}`, { headers })
+}
+
+function updateStatus(invoiceId, status) {
+    return axios.put(`${apiUrl}/invoices/status/${invoiceId}/${status}`, { headers })
 }

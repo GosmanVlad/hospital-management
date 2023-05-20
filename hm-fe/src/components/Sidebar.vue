@@ -25,6 +25,9 @@
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/departments'" class="router-link-path">
                         Departamente
                     </router-link></v-list-item>
+                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/people'" class="router-link-path">
+                        Personal si pacienti
+                    </router-link></v-list-item>
             </div>
         </v-list>
     </v-navigation-drawer>

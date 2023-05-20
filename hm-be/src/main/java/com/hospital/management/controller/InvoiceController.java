@@ -112,4 +112,21 @@ public class InvoiceController {
         responseMap = ResponseUtils.createResponseMap(false, "success_msg", this.pdfGenerator + "invoices/" + fileName + ".pdf");
         return ResponseEntity.ok(responseMap);
     }
+
+    @PutMapping("/status/{invoiceId}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable(value = "invoiceId") Long invoiceId,
+                                          @PathVariable(value = "status") String status) {
+        Map<String, Object> responseMap;
+
+        try {
+            invoiceService.updateStatus(invoiceId, status);
+
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", null);
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.getMessage());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
 }

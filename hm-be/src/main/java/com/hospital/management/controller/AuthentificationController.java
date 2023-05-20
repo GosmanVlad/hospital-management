@@ -1,12 +1,14 @@
 package com.hospital.management.controller;
 
 import com.hospital.management.config.JwtToken;
+import com.hospital.management.model.Department;
 import com.hospital.management.model.Employee;
 import com.hospital.management.model.User;
 import com.hospital.management.model.dto.auth.ChangePasswordRequest;
 import com.hospital.management.model.dto.auth.LoginRequest;
 import com.hospital.management.model.dto.auth.RegisterRequest;
 import com.hospital.management.service.implementation.UserDetailsServiceImpl;
+import com.hospital.management.service.util.DepartmentServiceUtil;
 import com.hospital.management.service.util.EmployeeServiceUtil;
 import com.hospital.management.service.util.UserServiceUtil;
 import org.apache.commons.logging.Log;
@@ -41,6 +43,9 @@ public class AuthentificationController {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    DepartmentServiceUtil departmentService;
 
     protected final Log logger = LogFactory.getLog(getClass());
     final AuthenticationManager authenticationManager;
@@ -105,7 +110,7 @@ public class AuthentificationController {
         User user = new User();
 
         try {
-            user.setUsername(request.getFirstName() + "_" + request.getLastName());
+            user.setUsername(request.getFirstName() + " " + request.getLastName());
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
@@ -119,6 +124,16 @@ public class AuthentificationController {
             user.setPersonalNumber(request.getPersonalNumber());
             user.setPhone(request.getPhone());
             userService.save(user);
+
+            if(!request.getRole().equals("PATIENT")) {
+                Employee employee = new Employee();
+                Department department = departmentService.findByDepartmentId(request.getDepartmentId());
+
+                employee.setUser(user);
+                employee.setDepartment(department);
+                employeeService.save(employee);
+
+            }
 
             UserDetails userDetails = userDetailsService.createUserDetails(user.getUsername(), user.getPassword());
             String token = jwtTokenUtil.generateToken(userDetails);

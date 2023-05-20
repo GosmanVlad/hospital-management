@@ -20,6 +20,7 @@ public class Invoice {
     private Date date;
 
     private Long vatPercentage;
+    private String status;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "doctor_id")

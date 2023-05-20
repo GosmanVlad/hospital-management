@@ -154,9 +154,6 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
     @Override
     public Context mapThymeleafVariables(Hospitalization hospitalization) {
         Context context = new Context();
-        double[] totalValue = {0.0};
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        DecimalFormat df = new DecimalFormat("0.00");
 
         context.setVariable("hospitalizationId", hospitalization.getHospitalizationId());
         context.setVariable("date", hospitalization.getStartDate());
