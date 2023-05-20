@@ -8,7 +8,7 @@
         </v-col>
         <v-col md='6'>
             <div style="height: 600px; width: 700px">
-                <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
+                <GChart type="PieChart" :data="chartData" :options="chartOptions" />
             </div>
         </v-col>
     </v-row>
@@ -36,8 +36,6 @@ export default {
                 chart: {
                     title: "Company Performance",
                     subtitle: "Sales, Expenses, and Profit: 2014-2017",
-                    width: 100,
-                    height: 100
                 },
             },
         };
