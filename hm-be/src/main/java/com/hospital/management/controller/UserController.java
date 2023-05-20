@@ -70,7 +70,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
         }
         responseMap.put("error", false);
-        responseMap.put("message", "XML files generated successfully!");
+        responseMap.put("message", "success");
         return ResponseEntity.ok(responseMap);
     }
 }
