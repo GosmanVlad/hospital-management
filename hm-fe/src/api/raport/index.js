@@ -10,8 +10,10 @@ const headers = {
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const raportService = {
-    getInvoicesRaport
+    getInvoicesRaport,
+    getCardsRaport
 };
+
 function getInvoicesRaport(filters) {
 
     let params = {
@@ -20,4 +22,14 @@ function getInvoicesRaport(filters) {
     };
 
     return axios.get(`${apiUrl}/raports/invoices`, { params: params }, { headers });
+}
+
+function getCardsRaport(filters) {
+
+    let params = {
+        patientId: filters?.patientId || undefined,
+        doctorId: filters?.doctorId || undefined,
+    };
+
+    return axios.get(`${apiUrl}/raports/cards`, { params: params }, { headers });
 }

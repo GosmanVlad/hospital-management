@@ -22,4 +22,13 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>, JpaSpec
 
     @Query(value = "SELECT * FROM invoices WHERE doctor_id = :doctorId AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<Invoice> findByDateBetweenAndDoctorId(@Param("doctorId") Long doctorId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query(value = "SELECT * FROM invoices WHERE doctor_id = :doctorId", nativeQuery = true)
+    List<Invoice> findByDoctorId(@Param("doctorId") Long doctorId);
+
+    @Query(value = "SELECT * FROM invoices WHERE patient_id = :patientId AND status = 'unpaid'", nativeQuery = true)
+    List<Invoice> findByPatientIdAndStatusUnpaid(@Param("patientId") Long patientId);
+
+    @Query(value = "SELECT * FROM invoices WHERE patient_id = :patientId AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<Invoice>  findByDateBetweenAndPatientId(@Param("patientId") Long patientId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

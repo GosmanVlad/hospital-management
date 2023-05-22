@@ -1,17 +1,17 @@
 package com.hospital.management.service.implementation;
 
-import com.hospital.management.model.Invoice;
-import com.hospital.management.model.InvoiceItem;
+import com.hospital.management.model.*;
+import com.hospital.management.model.dto.raport.CardRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.InvoiceRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.RaportParams;
+import com.hospital.management.repository.AppointmentRepository;
+import com.hospital.management.repository.HospitalizationRepository;
 import com.hospital.management.repository.InvoiceRepository;
-import com.hospital.management.service.util.InvoiceServiceUtil;
+import com.hospital.management.repository.UserRepository;
 import com.hospital.management.service.util.RaportServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -19,6 +19,15 @@ public class RaportServiceImpl implements RaportServiceUtil {
 
     @Autowired
     InvoiceRepository invoiceRepository;
+
+    @Autowired
+    HospitalizationRepository hospitalizationRepository;
+
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public List<InvoiceRaportOutcomingDto> getInvoicesRaport(RaportParams raportParams) {
@@ -40,7 +49,13 @@ public class RaportServiceImpl implements RaportServiceUtil {
             Date endDate = calendar.getTime();
 
             InvoiceRaportOutcomingDto invoiceRaportOutcomingDto = new InvoiceRaportOutcomingDto();
-            List<Invoice> invoices = invoiceRepository.findByDateBetweenAndDoctorId(raportParams.getDoctorId(), startDate, endDate);
+            List<Invoice> invoices = new ArrayList<>();
+
+            if(raportParams.getDoctorId() != null) {
+                invoices = invoiceRepository.findByDateBetweenAndDoctorId(raportParams.getDoctorId(), startDate, endDate);
+            } else if(raportParams.getPatientId() != null) {
+                invoices = invoiceRepository.findByDateBetweenAndPatientId(raportParams.getPatientId(), startDate, endDate);
+            }
 
             Long paidInvoice = 0L;
             Long unpaidInvoice = 0L;
@@ -70,4 +85,35 @@ public class RaportServiceImpl implements RaportServiceUtil {
         }
         return invoiceRaportOutcomingDtoList;
     }
+
+    @Override
+    public CardRaportOutcomingDto getCardsRaport(RaportParams raportParams) {
+        List<Hospitalization> hospitalizations = hospitalizationRepository.findByDoctorId(raportParams.getDoctorId());
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(raportParams.getDoctorId());
+        List<User> users = userRepository.findAllPatients();
+        List<Invoice> invoices = invoiceRepository.findByDoctorId(raportParams.getDoctorId());
+
+        CardRaportOutcomingDto cardRaportOutcomingDto = new CardRaportOutcomingDto();
+        cardRaportOutcomingDto.setAppointments(appointments.size());
+        cardRaportOutcomingDto.setHospitalizations(hospitalizations.size());
+        cardRaportOutcomingDto.setPatients(users.size());
+        cardRaportOutcomingDto.setInvoices(invoices.size());
+
+        return cardRaportOutcomingDto;
+    }
+
+    @Override
+    public CardRaportOutcomingDto getCardsRaportForPatient(RaportParams raportParams) {
+        List<Hospitalization> hospitalizations = hospitalizationRepository.findByPatientId(raportParams.getPatientId());
+        List<Appointment> appointments = appointmentRepository.findByPatientId(raportParams.getPatientId());
+        List<Invoice> invoices = invoiceRepository.findByPatientIdAndStatusUnpaid(raportParams.getPatientId());
+
+        CardRaportOutcomingDto cardRaportOutcomingDto = new CardRaportOutcomingDto();
+        cardRaportOutcomingDto.setAppointments(appointments.size());
+        cardRaportOutcomingDto.setHospitalizations(hospitalizations.size());
+        cardRaportOutcomingDto.setInvoices(invoices.size());
+
+        return cardRaportOutcomingDto;
+    }
+
 }

@@ -22,4 +22,10 @@ public interface HospitalizationRepository extends JpaRepository<Hospitalization
     @Modifying
     @Query(value = "UPDATE hospitalization SET doc_path = :docPath WHERE hospitalization_id = :hospitalizationId", nativeQuery = true)
     void updateHospitalizationDocPath(@Param("hospitalizationId") Long hospitalizationId, @Param("docPath") String path);
+
+    @Query(value = "SELECT * FROM hospitalization WHERE doctor_id = :doctorId", nativeQuery = true)
+    List<Hospitalization> findByDoctorId(@Param("doctorId") Long doctorId);
+
+    @Query(value = "SELECT * FROM hospitalization WHERE patient_id = :patientId", nativeQuery = true)
+    List<Hospitalization> findByPatientId(@Param("patientId") Long patientId);
 }
