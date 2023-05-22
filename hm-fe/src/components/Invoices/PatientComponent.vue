@@ -206,7 +206,6 @@ export default {
         },
 
         getStatusColour(status) {
-            console.log("Status", status);
             if (status === 'unpaid')
                 return 'error';
             if (status === 'paid')

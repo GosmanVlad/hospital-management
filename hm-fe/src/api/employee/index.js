@@ -35,6 +35,5 @@ function getEmployeesWithPagination(filters, pagination) {
         employeeId: filters?.employeeId
     };
 
-    console.log("Filters", filters);
     return axios.get(`${apiUrl}/employees/${pagFilters}`, { params: params }, { headers });
 }

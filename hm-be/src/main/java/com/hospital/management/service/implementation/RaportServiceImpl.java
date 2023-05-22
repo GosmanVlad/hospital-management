@@ -3,6 +3,7 @@ package com.hospital.management.service.implementation;
 import com.hospital.management.model.*;
 import com.hospital.management.model.dto.raport.CardRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.InvoiceRaportOutcomingDto;
+import com.hospital.management.model.dto.raport.PieRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.RaportParams;
 import com.hospital.management.repository.AppointmentRepository;
 import com.hospital.management.repository.HospitalizationRepository;
@@ -114,6 +115,30 @@ public class RaportServiceImpl implements RaportServiceUtil {
         cardRaportOutcomingDto.setInvoices(invoices.size());
 
         return cardRaportOutcomingDto;
+    }
+
+    @Override
+    public PieRaportOutcomingDto getPieRaport(RaportParams raportParams) {
+        PieRaportOutcomingDto pieRaportOutcomingDto = new PieRaportOutcomingDto();
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Bucharest");
+        Calendar calendar = Calendar.getInstance(timeZone);
+        int year = calendar.get(Calendar.YEAR);
+
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMinimum(Calendar.DAY_OF_YEAR));
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
+        Date endDate = calendar.getTime();
+
+        List<Hospitalization> hospitalizations = hospitalizationRepository.findByEmployeeAndDateBetween(raportParams.getDoctorId(), startDate, endDate);
+        List<Appointment> appointments = appointmentRepository.findByEmployeeAndDateBetween(raportParams.getDoctorId(), startDate, endDate);
+
+        pieRaportOutcomingDto.setAppointments(appointments.size());
+        pieRaportOutcomingDto.setHospitalizations(hospitalizations.size());
+        return pieRaportOutcomingDto;
     }
 
 }

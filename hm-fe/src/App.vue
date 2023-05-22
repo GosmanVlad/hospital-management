@@ -48,7 +48,6 @@ export default {
   mounted() {
     axios.interceptors.response.use(
       (response) => {
-        console.log("Approve")
         return response;
       },
       (error) => {

@@ -79,16 +79,16 @@
         </v-col>
     </v-row>
     <v-divider class="divider" />
-    <h3 class="page-title">Grafic facturi</h3>
+    <h3 class="page-title">Grafice aplicat pe anul {{ currentYear() }}</h3>
     <v-row>
         <v-col md='6'>
             <div style="height: 600px; width: 700px">
                 <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
             </div>
         </v-col>
-        <v-col md='6'>
+        <v-col md='6' v-if="role !== 'PATIENT'">
             <div style="height: 600px; width: 700px">
-                <GChart type="PieChart" :data="chartData" :options="chartOptions" />
+                <GChart type="PieChart" :data="pies" :options="chartOptions" />
             </div>
         </v-col>
     </v-row>
@@ -106,10 +106,15 @@ export default {
                 patientId: undefined,
                 doctorId: undefined
             },
+
+            pies: [
+                ["Name", "Value"]
+            ],
+
             chartOptions: {
                 chart: {
-                    title: "Company Performance",
-                    subtitle: "Sales, Expenses, and Profit: 2014-2017",
+                    title: "Hospital Performance",
+                    subtitle: "Invoices, hospitalizations, patients",
                 },
             },
 
@@ -121,6 +126,10 @@ export default {
     mounted() {
         this.loadInvoiceRaport();
         this.loadCardsRaport();
+
+        if (this.$store.getters.StateEmployeeId) {
+            this.getPieRaport();
+        }
     },
     methods: {
         loadInvoiceRaport() {
@@ -136,7 +145,7 @@ export default {
             raportService.getInvoicesRaport(this.filters).then((res) => {
                 res.data.result.map((item) => {
                     const obj = [moment(item.date).format("MMM"), item.paidInvoices, item.unpaidInvoices, item.pendingInvoices];
-                    this.chartData.push(obj)
+                    this.chartData.push(obj);
                 })
             })
         },
@@ -154,6 +163,22 @@ export default {
             raportService.getCardsRaport(this.filters).then((res) => {
                 this.cards = res.data.result;
             })
+        },
+
+        getPieRaport() {
+            if (this.$store.getters.StateEmployeeId) {
+                this.filters = {
+                    doctorId: this.$store.getters.StateEmployeeId
+                }
+            }
+            raportService.getPieRaport(this.filters).then((res) => {
+                this.pies.push(["Programari", res.data.result.appointments]);
+                this.pies.push(["Internari", res.data.result.hospitalizations]);
+            })
+        },
+
+        currentYear() {
+            return moment().format("YYYY");
         }
     },
 

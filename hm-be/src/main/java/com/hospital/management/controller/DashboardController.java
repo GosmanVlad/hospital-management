@@ -2,6 +2,7 @@ package com.hospital.management.controller;
 
 import com.hospital.management.model.dto.raport.CardRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.InvoiceRaportOutcomingDto;
+import com.hospital.management.model.dto.raport.PieRaportOutcomingDto;
 import com.hospital.management.model.dto.raport.RaportParams;
 import com.hospital.management.service.util.RaportServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
@@ -66,6 +67,26 @@ public class DashboardController {
                 invoicesRaport = raportService.getCardsRaportForPatient(raportParams);
             }
             responseMap = ResponseUtils.createResponseMap(false, "success_msg", invoicesRaport);
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = PieRaportOutcomingDto.class))})})
+    @GetMapping("/pie-raport")
+    public ResponseEntity<?> getPieRaport(RaportParams raportParams) {
+        Map<String, Object> responseMap;
+
+        try {
+            PieRaportOutcomingDto pieRaportOutcomingDto = raportService.getPieRaport(raportParams);
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", pieRaportOutcomingDto);
             return ResponseEntity.ok(responseMap);
         } catch (Exception e) {
             e.printStackTrace();

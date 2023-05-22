@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
@@ -25,4 +26,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     @Query(value = "SELECT * FROM appointments WHERE user_id = :patientId", nativeQuery = true)
     List<Appointment> findByPatientId(@Param("patientId") Long patientId);
+
+    @Query(value = "SELECT * FROM appointments WHERE employee_id = :doctorId AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<Appointment> findByEmployeeAndDateBetween(@Param("doctorId") Long doctorId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

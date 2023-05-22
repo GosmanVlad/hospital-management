@@ -164,7 +164,6 @@ export default {
             this.loading = true;
             departmentService.getDepartments().then((res) => {
                 this.departments = res.data.result;
-                console.log(this.departments);
                 this.loading = false;
             }).catch((err) => {
                 this.loading = false;
@@ -177,7 +176,6 @@ export default {
             })
         },
         removeDepartments(departmentId) {
-            console.log(departmentId);
             departmentService.removeDepartments(departmentId).then(() => {
                 this.getDepartments();
                 this.snackbar = {
