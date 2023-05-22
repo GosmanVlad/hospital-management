@@ -14,37 +14,50 @@
     </v-row>
 </template>
 <script>
+import { raportService } from "@/api";
+import moment from "moment";
+
 export default {
     name: "DashboardComponent",
     data() {
         return {
-            chartData: [
-                ["Month", "Platite", "Neplatite", "In asteptare"],
-                ["Ianuarie", 1000, 400, 200],
-                ["Martie", 1170, 460, 250],
-                ["Aprilie", 660, 1120, 300],
-                ["Mai", 1030, 540, 350],
-                ["Iunie", 1030, 540, 350],
-                ["Iulie", 1030, 540, 350],
-                ["August", 1030, 540, 350],
-                ["Septembrie", 1030, 540, 350],
-                ["Octombrie", 1030, 540, 350],
-                ["Noiembrie", 1030, 540, 350],
-                ["Decembrie", 1030, 540, 350],
-            ],
+            filters: {
+                patientId: undefined,
+                doctorId: undefined
+            },
             chartOptions: {
                 chart: {
                     title: "Company Performance",
                     subtitle: "Sales, Expenses, and Profit: 2014-2017",
                 },
             },
+
+            chartData: [
+                ["Luna", "Platite", "Neplatite", "Anulat"],
+            ]
         };
     },
+    mounted() {
+        this.loadInvoiceRaport();
+    },
+    methods: {
+        loadInvoiceRaport() {
+            if (this.$store.getters.StateEmployeeId) {
+                this.filters = {
+                    doctorId: this.$store.getters.StateEmployeeId
+                }
+            }
+            raportService.getInvoicesRaport(this.filters).then((res) => {
+                res.data.result.map((item) => {
+                    const obj = [moment(item.date).format("MMM"), item.paidInvoices, item.unpaidInvoices, item.pendingInvoices];
+                    this.chartData.push(obj)
+                })
+            })
+        }
+    }
 }
 </script>
 <style scoped>
-.box {}
-
 .test {
     margin-bottom: -300px;
 }

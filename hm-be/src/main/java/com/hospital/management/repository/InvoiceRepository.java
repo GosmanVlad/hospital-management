@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 public interface InvoiceRepository extends JpaRepository<Invoice, Long>, JpaSpecificationExecutor<Invoice> {
     @Query(value = "SELECT * FROM invoices WHERE invoice_id = :invoiceId", nativeQuery = true)
     Invoice findByInvoiceId(@Param("invoiceId") Long invoiceId);
@@ -16,4 +19,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>, JpaSpec
     @Modifying
     @Query(value = "UPDATE invoices SET status = :status WHERE invoice_id = :invoiceId", nativeQuery = true)
     void updateStatus(@Param("invoiceId") Long invoiceId, @Param("status") String status);
+
+    @Query(value = "SELECT * FROM invoices WHERE doctor_id = :doctorId AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<Invoice> findByDateBetweenAndDoctorId(@Param("doctorId") Long doctorId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

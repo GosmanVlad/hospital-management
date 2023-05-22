@@ -7,3 +7,4 @@ export { userService } from "./user/index";
 export { salonService } from "./salon/index";
 export { fileService } from "./file/index";
 export { invoiceService } from "./invoice/index";
+export { raportService } from "./raport/index";
