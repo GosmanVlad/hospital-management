@@ -11,7 +11,10 @@ const apiUrl = process.env.VUE_APP_API_URL;
 export const userService = {
     getAllPatients,
     getAllPatientsWithPagination,
-    importPeople
+    importPeople,
+    getUserProfile,
+    updateUserPassword,
+    updateUserProfile
 };
 
 function getAllPatients() {
@@ -37,3 +40,16 @@ function importPeople(csvFile) {
 
     return axios.post(`${apiUrl}/users/import`, formData);
 }
+
+function getUserProfile(userId) {
+    return axios.get(`${apiUrl}/users/profile/${userId}`, { headers });
+}
+
+function updateUserPassword(userId, body) {
+    return axios.put(`${apiUrl}/auth/change-password/${userId}`, body, { headers });
+}
+
+function updateUserProfile(userId, body) {
+    return axios.put(`${apiUrl}/users/profile/${userId}`, body, { headers });
+}
+

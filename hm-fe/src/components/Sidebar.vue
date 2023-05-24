@@ -32,6 +32,9 @@
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/departments'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-office-building</v-icon>Departamente
                     </router-link></v-list-item>
+                <v-list-item><router-link :to="'/profile/' + this.userId" class="router-link-path">
+                        <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-account</v-icon>Setari cont
+                    </router-link></v-list-item>
             </div>
         </v-list>
     </v-navigation-drawer>
@@ -56,6 +59,9 @@ export default {
         },
         role: function () {
             return this.$store.getters.StateRole;
+        },
+        userId: function () {
+            return this.$store.getters.StateUserId;
         },
     },
 }

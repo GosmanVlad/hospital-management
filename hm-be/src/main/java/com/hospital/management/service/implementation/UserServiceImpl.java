@@ -5,12 +5,16 @@ import com.hospital.management.model.dto.department.DepartmentCsvLayout;
 import com.hospital.management.model.dto.department.DepartmentImportRequest;
 import com.hospital.management.model.dto.people.PeopleCsvLayout;
 import com.hospital.management.model.dto.people.PeopleRequestImport;
+import com.hospital.management.model.dto.user.UserOutcomingDto;
+import com.hospital.management.model.dto.user.UserUpdateRequest;
 import com.hospital.management.repository.DepartmentRepository;
 import com.hospital.management.repository.EmployeeRepository;
 import com.hospital.management.repository.UserRepository;
 import com.hospital.management.service.util.FileServiceUtil;
 import com.hospital.management.service.util.UserServiceUtil;
+import com.hospital.management.utils.ResponseUtils;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -116,6 +120,50 @@ public class UserServiceImpl implements UserServiceUtil {
                 }
             }
         }catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @Override
+    public UserOutcomingDto getUserProfile(Long userId) {
+        User user = userRepository.findByUserId(userId);
+        UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
+
+        if(user != null) {
+            userOutcomingDto.setCreatedDate(user.getCreatedDate());
+            userOutcomingDto.setEmail(user.getEmail());
+            userOutcomingDto.setFirstName(user.getFirstName());
+            userOutcomingDto.setLastName(user.getLastName());
+            userOutcomingDto.setBirthDate(user.getBirthdate());
+            userOutcomingDto.setCity(user.getCity());
+            userOutcomingDto.setCountry(user.getCountry());
+            userOutcomingDto.setHomeAddress(user.getHomeAddress());
+            userOutcomingDto.setPersonalNumber(user.getPersonalNumber());
+            userOutcomingDto.setPhone(user.getPhone());
+        }
+        return userOutcomingDto;
+    }
+
+    @Override
+    public void updateUserProfile(Long userId, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findByUserId(userId);
+
+        try {
+            if (user != null) {
+                user.setCreatedDate(userUpdateRequest.getCreatedDate());
+                user.setEmail(userUpdateRequest.getEmail());
+                user.setFirstName(userUpdateRequest.getFirstName());
+                user.setLastName(userUpdateRequest.getLastName());
+                user.setBirthdate(userUpdateRequest.getBirthDate());
+                user.setCity(userUpdateRequest.getCity());
+                user.setCountry(userUpdateRequest.getCountry());
+                user.setHomeAddress(userUpdateRequest.getHomeAddress());
+                user.setPersonalNumber(userUpdateRequest.getPersonalNumber());
+                user.setPhone(userUpdateRequest.getPhone());
+
+                userRepository.save(user);
+            }
+        }catch(Exception exception) {
             exception.printStackTrace();
         }
     }

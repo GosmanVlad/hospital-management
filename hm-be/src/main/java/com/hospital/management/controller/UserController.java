@@ -7,6 +7,8 @@ import com.hospital.management.model.dto.department.DepartmentImportRequest;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.people.PeopleRequestImport;
+import com.hospital.management.model.dto.user.UserOutcomingDto;
+import com.hospital.management.model.dto.user.UserUpdateRequest;
 import com.hospital.management.service.util.UserServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,5 +87,40 @@ public class UserController {
         responseMap.put("error", false);
         responseMap.put("message", "success");
         return ResponseEntity.ok(responseMap);
+    }
+
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @GetMapping(value = "/profile/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId) {
+
+        Map<String, Object> responseMap = new HashMap<>();
+        try {
+            UserOutcomingDto userOutcomingDto = userService.getUserProfile(userId);
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", userOutcomingDto);
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            responseMap.put("error", true);
+            responseMap.put("message", exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+    }
+
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @PutMapping(value = "/profile/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserProfile(@PathVariable(value = "userId") Long userId,
+                                            @RequestBody UserUpdateRequest userUpdateRequest) {
+
+        Map<String, Object> responseMap = new HashMap<>();
+        try {
+            userService.updateUserProfile(userId, userUpdateRequest);
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", "");
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            responseMap.put("error", true);
+            responseMap.put("message", exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
     }
 }
