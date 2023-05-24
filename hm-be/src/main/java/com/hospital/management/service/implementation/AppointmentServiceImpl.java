@@ -7,11 +7,13 @@ import com.hospital.management.model.*;
 import com.hospital.management.model.dto.appointment.AppointmentOutcomingDto;
 import com.hospital.management.model.dto.appointment.AppointmentParams;
 import com.hospital.management.model.dto.appointment.AppointmentRequest;
+import com.hospital.management.model.dto.email.EmailData;
 import com.hospital.management.repository.AppointmentRepository;
 import com.hospital.management.repository.DepartmentRepository;
 import com.hospital.management.repository.EmployeeRepository;
 import com.hospital.management.repository.UserRepository;
 import com.hospital.management.service.util.AppointmentServiceUtil;
+import com.hospital.management.service.util.EmailServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -39,6 +41,9 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
     @Autowired
     AppointmentRepository appointmentRepository;
 
+    @Autowired
+    EmailServiceUtil emailService;
+
     @Override
     public void add(AppointmentRequest appointmentRequest) throws AppointmentFieldsException, AppointmentOverlapException {
         if (appointmentRequest.getDepartmentId() == null || appointmentRequest.getDate() == null || appointmentRequest.getEmployeeId() == null) {
@@ -64,6 +69,16 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setEmployee(doctor);
         appointmentRepository.save(appointment);
+
+        EmailData emailData = new EmailData();
+        emailData.setSendTo(doctor.getUser().getEmail());
+        emailData.setSubject("[HM] Programare noua");
+        emailData.setBody("O noua programare asteapta raspunsul dvs.\n" +
+                "Poti administra programarile din platforma interna Hospital Management!\n\n" +
+                "Pacient: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
+                "Data: " + appointmentRequest.getDate() + "\n" +
+                "Alte detalii: " + appointmentRequest.getDetails());
+        emailService.sendMail(emailData);
     }
 
     @Override
