@@ -74,8 +74,10 @@
                             <td>
                                 <div class="one-line">
                                     <span class="group pa-2 cursor">
-                                        <v-tooltip activator="parent" location="top">Vezi mai multe detalii</v-tooltip>
-                                        <v-icon>mdi-account</v-icon>
+                                        <router-link :to="'/profile/' + item.user.userId" style="color:black"><v-tooltip
+                                                activator="parent" location="top">Vezi mai
+                                                multe detalii</v-tooltip>
+                                            <v-icon>mdi-account</v-icon></router-link>
                                     </span>
                                 </div>
                             </td>
@@ -143,9 +145,11 @@
                             <td>{{ formatDateWithoutHour(item.createdDate) }}</td>
                             <td>
                                 <div class="one-line">
-                                    <span class="group pa-2 cursor" @click="removeDepartments(item.departmentId)">
-                                        <v-tooltip activator="parent" location="top">Sterge</v-tooltip>
-                                        <v-icon>mdi-account</v-icon>
+                                    <span class="group pa-2 cursor">
+                                        <router-link :to="'/profile/' + item.userId" style="color:black"><v-tooltip
+                                                activator="parent" location="top">Vezi mai
+                                                multe detalii</v-tooltip>
+                                            <v-icon>mdi-account</v-icon></router-link>
                                     </span>
                                 </div>
                             </td>
