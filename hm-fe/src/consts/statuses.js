@@ -10,7 +10,8 @@ const invoiceStatus = [
     { key: '', value: "Toate" },
     { key: 'unpaid', value: "Neplatita" },
     { key: 'paid', value: "Platita" },
-    { key: 'canceled', value: "Anulata" }];
+    { key: 'canceled', value: "Anulata" },
+    { key: 'pending_user', value: "In asteptarea confirmarii" }];
 
 
 export { appointmentStatus, invoiceStatus }

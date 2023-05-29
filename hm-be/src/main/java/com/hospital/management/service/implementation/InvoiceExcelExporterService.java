@@ -98,8 +98,8 @@ public class InvoiceExcelExporterService {
             }
 
             createCell(row, columnCount++, totalInvoice, style);
-            createCell(row, columnCount++, invoice.getVatPercentage() + "% (" + (double) Math.round((double) invoice.getVatPercentage() / 100 * totalInvoice * 100)/100 + " RON)", style);
-            createCell(row, columnCount++, totalInvoice - ((double) Math.round((double) invoice.getVatPercentage() / 100 * totalInvoice * 100)/100) + " RON", style);
+            createCell(row, columnCount++, invoice.getVatPercentage() + "% (" + (double) Math.round((double) invoice.getVatPercentage() / 100 * totalInvoice * 100)/100 + ")", style);
+            createCell(row, columnCount++, totalInvoice - ((double) Math.round((double) invoice.getVatPercentage() / 100 * totalInvoice * 100)/100), style);
         }
     }
 

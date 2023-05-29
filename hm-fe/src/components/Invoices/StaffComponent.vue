@@ -93,16 +93,16 @@
                                         <v-icon>mdi-file-cabinet</v-icon>
                                     </span>
                                     <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'paid')"
-                                        v-if="item.status === 'unpaid' || item.status === 'canceled'">
+                                        v-if="item.status === 'unpaid' || item.status === 'canceled' || item.status === 'pending_user'">
                                         <v-tooltip activator="parent" location="top">Marcheaza ca platit</v-tooltip>
                                         <v-icon>mdi-receipt-text-check-outline</v-icon>
                                     </span>
                                     <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'unpaid')"
-                                        v-if="item.status === 'paid' || item.status === 'canceled'">
+                                        v-if="item.status === 'paid' || item.status === 'canceled' || item.status === 'pending_user'">
                                         <v-tooltip activator="parent" location="top">Marcheaza ca neplatit</v-tooltip>
                                         <v-icon>mdi-receipt-text-clock</v-icon>
                                     </span>
-                                    <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'canceled')"
+                                    <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'pending_user')"
                                         v-if="item.status === 'paid' || item.status === 'unpaid'">
                                         <v-tooltip activator="parent" location="top">Marcheaza ca anulata</v-tooltip>
                                         <v-icon>mdi-cancel</v-icon>
@@ -255,6 +255,8 @@ export default {
                 return 'green'
             if (status === 'canceled')
                 return 'gray'
+            if (status === 'pending_user')
+                return 'yellow'
             return '';
         },
         getStatusLabel(status) {

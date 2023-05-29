@@ -76,6 +76,11 @@
                             <v-tooltip activator="parent" location="top">Descarca factura</v-tooltip>
                             <v-icon>mdi-file-cabinet</v-icon>
                         </span>
+                        <span class="group pa-2 cursor" @click="updateStatus(item.invoiceId, 'canceled')"
+                            v-if="item.status === 'pending_user'">
+                            <v-tooltip activator="parent" location="top">Accepta anularea</v-tooltip>
+                            <v-icon>mdi-check</v-icon>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -212,12 +217,19 @@ export default {
                 return 'green'
             if (status === 'canceled')
                 return 'gray'
+            if (status === 'pending_user')
+                return 'yellow'
             return '';
         },
         getStatusLabel(status) {
             const stats = this.statuses.find((x) => x.key === status);
             return stats?.value || "Unknown";
         },
+        updateStatus(invoiceId, status) {
+            console.log(invoiceId);
+            console.log(status);
+            invoiceService.updateStatus(invoiceId, status).then(() => this.getInvoices());
+        }
     },
 }
 </script>
