@@ -2,6 +2,7 @@ package com.hospital.management.service.implementation;
 
 import com.hospital.management.constant.InvoiceStatus;
 import com.hospital.management.model.*;
+import com.hospital.management.model.dto.email.EmailData;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.invoice.InvoiceOutcomingDto;
 import com.hospital.management.model.dto.invoice.InvoiceParams;
@@ -10,6 +11,7 @@ import com.hospital.management.repository.EmployeeRepository;
 import com.hospital.management.repository.InvoiceItemRepository;
 import com.hospital.management.repository.InvoiceRepository;
 import com.hospital.management.repository.UserRepository;
+import com.hospital.management.service.util.EmailServiceUtil;
 import com.hospital.management.service.util.InvoiceServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.modelmapper.ModelMapper;
@@ -44,6 +46,9 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    EmailServiceUtil emailService;
 
     @Override
     public Page<Invoice> findByFilter(InvoiceParams invoiceParams, Pageable pageable) {
@@ -161,6 +166,16 @@ public class InvoiceServiceImpl implements InvoiceServiceUtil {
         }
         invoice.setInvoiceItems(invoiceItems);
         invoiceRepository.save(invoice);
+
+        /* Send email to the patient */
+        EmailData emailData = new EmailData();
+        emailData.setSendTo(patient.getEmail());
+        emailData.setSubject("[HM] O noua factura a fost emsa");
+        emailData.setBody("Doctorul " + invoice.getEmployee().getUser().getLastName() + " " + invoice.getEmployee().getUser().getFirstName() + " tocmai a emis o noua factura pe numele dvs.\n" +
+                "Pentru mai multe detalii poti accesa platforma HM - sectiunea facturi\n\n" +
+                "Data emiterii: " + invoice.getDate() + "\n" +
+                "Procent TVA: " + invoice.getVatPercentage());
+        emailService.sendMail(emailData);
     }
 
     @Override

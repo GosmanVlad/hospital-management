@@ -55,7 +55,7 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
         Employee doctor = employeeRepository.findByEmployeeId(appointmentRequest.getEmployeeId());
         Appointment checkAppointment = appointmentRepository.findByDate(appointmentRequest.getDate());
 
-        if(checkAppointment != null) {
+        if (checkAppointment != null) {
             throw new AppointmentOverlapException("overlap_appointment");
         }
 
@@ -152,5 +152,28 @@ public class AppointmentServiceImpl implements AppointmentServiceUtil {
     @Override
     public void changeAppointmentStatus(Long appointmentId, String status) {
         appointmentRepository.changeAppointmentStatus(appointmentId, status);
+        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+
+        if (appointment != null) {
+            EmailData emailData = new EmailData();
+            emailData.setSendTo(appointment.getUser().getEmail());
+            emailData.setSubject("[HM] Informatii noi despre programare");
+
+            if (status.equals("declined")) {
+                emailData.setBody("Programarea efectuata de dvs pentru departamentul " + appointment.getDepartment().getDepartmentName() + " a fost respinsa!\n" +
+                        "Poti contacta doctorul " + appointment.getEmployee().getUser().getLastName() + " " + appointment.getEmployee().getUser().getFirstName() + " pentru mai multe detalii \n\n" +
+                        "Identificator programare: " + appointment.getAppointmentId() + "\n" +
+                        "Data: " + appointment.getDate() + "\n" +
+                        "Alte detalii: " + appointment.getDetails());
+                emailService.sendMail(emailData);
+            } else if (status.equals("accepted")) {
+                emailData.setBody("Programarea efectuata de dvs pentru departamentul " + appointment.getDepartment().getDepartmentName() + " a fost acceptata!\n\n" +
+                        "Doctor: " + appointment.getEmployee().getUser().getLastName() + " " + appointment.getEmployee().getUser().getFirstName() + "\n" +
+                        "Identificator programare: " + appointment.getAppointmentId() + "\n" +
+                        "Data: " + appointment.getDate() + "\n" +
+                        "Alte detalii: " + appointment.getDetails());
+                emailService.sendMail(emailData);
+            }
+        }
     }
 }

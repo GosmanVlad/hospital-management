@@ -7,8 +7,10 @@ import com.hospital.management.model.User;
 import com.hospital.management.model.dto.auth.ChangePasswordRequest;
 import com.hospital.management.model.dto.auth.LoginRequest;
 import com.hospital.management.model.dto.auth.RegisterRequest;
+import com.hospital.management.model.dto.email.EmailData;
 import com.hospital.management.service.implementation.UserDetailsServiceImpl;
 import com.hospital.management.service.util.DepartmentServiceUtil;
+import com.hospital.management.service.util.EmailServiceUtil;
 import com.hospital.management.service.util.EmployeeServiceUtil;
 import com.hospital.management.service.util.UserServiceUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +50,9 @@ public class AuthentificationController {
 
     @Autowired
     DepartmentServiceUtil departmentService;
+
+    @Autowired
+    EmailServiceUtil emailService;
 
     protected final Log logger = LogFactory.getLog(getClass());
     final AuthenticationManager authenticationManager;
@@ -141,6 +146,17 @@ public class AuthentificationController {
 
             UserDetails userDetails = userDetailsService.createUserDetails(user.getUsername(), user.getPassword());
             String token = jwtTokenUtil.generateToken(userDetails);
+
+
+            /* Send email to the user */
+            EmailData emailData = new EmailData();
+            emailData.setSendTo(user.getEmail());
+            emailData.setSubject("[HM] Activare cont");
+            emailData.setBody("Un nou cont de acces a fost creat pe platforma Hospital Management cu acest email!\n\n" +
+                    "Pentru a activa contul te rugam sa accesezi platforma HM si sa faci o prima autentificare cu datele de mai jos:\n" +
+                    "Email: " + user.getEmail() + "\n" +
+                    "Parola: " + "gsmvlad");
+            emailService.sendMail(emailData);
 
             responseMap.put("error", false);
             responseMap.put("email", user.getEmail());

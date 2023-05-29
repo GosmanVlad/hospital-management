@@ -3,10 +3,12 @@ package com.hospital.management.service.implementation;
 import com.hospital.management.exception.appointment.AppointmentFieldsException;
 import com.hospital.management.exception.salon.SalonSeatsException;
 import com.hospital.management.model.*;
+import com.hospital.management.model.dto.email.EmailData;
 import com.hospital.management.model.dto.hospitalization.HospitalizationOutcomingDto;
 import com.hospital.management.model.dto.hospitalization.HospitalizationParams;
 import com.hospital.management.model.dto.hospitalization.HospitalizationRequest;
 import com.hospital.management.repository.*;
+import com.hospital.management.service.util.EmailServiceUtil;
 import com.hospital.management.service.util.HospitalizationServiceUtil;
 import com.hospital.management.utils.ResponseUtils;
 import org.modelmapper.ModelMapper;
@@ -44,6 +46,9 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
 
     @Autowired
     SalonRepository salonRepository;
+
+    @Autowired
+    EmailServiceUtil emailService;
 
     @Override
     public Page<Hospitalization> findByFilter(HospitalizationParams hospitalizationParams, Pageable pageable) {
@@ -121,6 +126,18 @@ public class HospitalizationServiceImpl implements HospitalizationServiceUtil {
         hospitalization.setDiagnosis(hospitalizationRequest.getDiagnosis());
         hospitalization.setSalon(salon);
         hospitalizationRepository.save(hospitalization);
+
+        /* Send email to the patient */
+        EmailData emailData = new EmailData();
+        emailData.setSendTo(patient.getEmail());
+        emailData.setSubject("[HM] Internare noua");
+        emailData.setBody("Doctorul " + hospitalization.getDoctor().getUser().getLastName() + " " + hospitalization.getDoctor().getUser().getFirstName() + " tocmai a efectuat o internare.\n\n" +
+                "Data internare: " + hospitalization.getStartDate() + "\n" +
+                "Data externare: " + hospitalization.getEndDate() + "\n" +
+                "Departament: " + hospitalization.getDepartment().getDepartmentName() + "\n" +
+                "Diagnostic: " + hospitalization.getDiagnosis() + "\n" +
+                "Salon: " + hospitalization.getSalon().getSalonName());
+        emailService.sendMail(emailData);
     }
 
     @Override
