@@ -19,17 +19,18 @@
                 <v-list-item><router-link :to="'/hospitalization'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-hospital-building</v-icon> Internari
                     </router-link></v-list-item>
-                <v-list-item><router-link :to="'/invoices'" class="router-link-path">
+                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/invoices'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-receipt-text-edit</v-icon> Facturi
                     </router-link></v-list-item>
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/people'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-account-details</v-icon> Personal si
                         pacienti
                     </router-link></v-list-item>
-                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/salons'" class="router-link-path">
+                <v-list-item v-if="role === 'DOCTOR' || role === 'NURSE'"><router-link :to="'/salons'"
+                        class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-bed</v-icon> Saloane
                     </router-link></v-list-item>
-                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/departments'" class="router-link-path">
+                <v-list-item v-if="role === 'NURSE'"><router-link :to="'/departments'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-office-building</v-icon>Departamente
                     </router-link></v-list-item>
                 <v-list-item><router-link :to="'/profile/' + this.userId" class="router-link-path">
