@@ -94,6 +94,7 @@ public class AuthentificationController {
             responseMap.put("email", user.getEmail());
             responseMap.put("username", user.getUsername());
             responseMap.put("user_id", user.getUserId());
+            responseMap.put("department_id", user.getEmployee().getDepartment().getDepartmentId());
             responseMap.put("first_name", user.getFirstName());
             responseMap.put("last_name", user.getLastName());
             responseMap.put("role", user.getRole());

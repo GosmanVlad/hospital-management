@@ -23,6 +23,9 @@
                 <th class="text-left">
                     Nume aplicant
                 </th>
+                <th class="text-left" v-if="role === 'NURSE'">
+                    Doctor
+                </th>
                 <th class="text-left">
                     Data
                 </th>
@@ -41,6 +44,7 @@
             <tr v-for="item in tableData?.content" :key="item.appointmentId" class="table-rows">
                 <td>{{ item.appointmentId }}</td>
                 <td>{{ item.firstNameApplicant + ' ' + item.lastNameApplicant }}</td>
+                <td v-if="role === 'NURSE'">{{ item.employeeName }}</td>
                 <td>{{ formatDateWithHour(item.date) }}</td>
                 <td>{{ item.details }}</td>
                 <td><v-chip class="ma-2" :color="getStatusColour(item.status)" text-color="white">
@@ -114,9 +118,18 @@ export default {
     mounted() {
         this.loadAppointments();
     },
+    computed: {
+        role: function () {
+            return this.$store.getters.StateRole;
+        },
+    },
     methods: {
         loadAppointments() {
-            this.filters.employeeId = this.$store.getters.StateEmployeeId;
+            if (this.$store.getters.StateRole === 'NURSE') {
+                this.filters.departmentId = this.$store.getters.StateDepartmentId;
+            } else {
+                this.filters.employeeId = this.$store.getters.StateEmployeeId;
+            }
             this.loading = true;
             appointmentService.getAppointments(this.filters, this.pagination).then((res) => {
                 this.tableData = res.data.result;

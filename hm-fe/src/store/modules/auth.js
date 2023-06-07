@@ -8,7 +8,8 @@ const state = {
     role: null,
     activated: false,
     userId: null,
-    employeeId: null
+    employeeId: null,
+    departmentId: null
 };
 const getters = {
     StateRole: (state) => state.role,
@@ -16,6 +17,7 @@ const getters = {
     StateUser: (state) => state.user,
     StateToken: (state) => state.token,
     StateUserId: (state) => state.userId,
+    StateDepartmentId: (state) => state.departmentId,
     StateEmployeeId: (state) => state.employeeId,
     StateActivated: (state) => state.activated
 };
@@ -40,6 +42,7 @@ const actions = {
             await commit("setToken", response.data.token);
             await commit("setActivated", response.data.activated);
             await commit("setUserId", response.data.user_id);
+            await commit("setDepartmentId", response.data.department_id || null);
             await commit("setEmployeeId", response.data.employee_id);
         }
         return response;
@@ -60,6 +63,9 @@ const mutations = {
     },
     setUserId(state, userId) {
         state.userId = userId;
+    },
+    setDepartmentId(state, departmentId) {
+        state.departmentId = departmentId;
     },
     setEmployeeId(state, employeeId) {
         state.employeeId = employeeId;
