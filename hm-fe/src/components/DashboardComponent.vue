@@ -47,7 +47,7 @@
             </v-card>
         </v-col>
         <v-col md="3">
-            <v-card class="mx-auto card-green" max-width="344" variant="outlined" v-if="role !== 'PATIENT'">
+            <v-card class="mx-auto card-green" max-width="344" variant="outlined" v-if="role === 'DOCTOR'">
                 <v-card-item>
                     <div>
                         <div class="text-overline mb-1">
