@@ -12,9 +12,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findByUsername(String username);
     User findByEmail(String email);
 
-    @Query(value = "SELECT * FROM users WHERE user_id = :userId", nativeQuery = true)
-    User findByUserId(@Param("userId") Long userId);
-
     @Query(value = "SELECT * FROM users WHERE role = 'PATIENT'", nativeQuery = true)
     List<User> findAllPatients();
+
+    @Query(value = "SELECT * FROM users WHERE user_id = :userId", nativeQuery = true)
+    User findByUserId(@Param("userId") Long userId);
 }

@@ -22,7 +22,8 @@
                 <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/invoices'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-receipt-text-edit</v-icon> Facturi
                     </router-link></v-list-item>
-                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/people'" class="router-link-path">
+                <v-list-item v-if="role === 'DOCTOR' || role === 'NURSE'"><router-link :to="'/people'"
+                        class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-account-details</v-icon> Personal si
                         pacienti
                     </router-link></v-list-item>

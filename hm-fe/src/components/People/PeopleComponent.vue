@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-tabs v-model="tab">
-        <v-tab value="one">Angajati</v-tab>
+        <v-tab value="one" v-if="storeRole === 'DOCTOR'">Angajati</v-tab>
         <v-tab value="two">Pacienti</v-tab>
         <v-tab value="three">Importa persoane</v-tab>
     </v-tabs>
@@ -242,6 +242,11 @@ export default {
         this.loadStaff();
         this.loadDoctorsNomenclature();
         this.loadPatientNomenclature();
+    },
+    computed: {
+        storeRole: function () {
+            return this.$store.getters.StateRole;
+        },
     },
     methods: {
         selectCSV(event) {

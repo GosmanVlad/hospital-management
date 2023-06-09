@@ -28,7 +28,7 @@
                 <v-btn color="green" @click="exportExcel" style="margin-right: 10px" density="compact">
                     Exporta excel
                 </v-btn>
-                <v-btn color="error" v-bind="props" v-if="role === 'DOCTOR'" density="compact">
+                <v-btn color="error" v-bind="props" v-if="role === 'DOCTOR' || role === 'NURSE'" density="compact">
                     Adauga o internare
                 </v-btn>
 
