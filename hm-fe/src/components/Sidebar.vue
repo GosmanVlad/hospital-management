@@ -19,7 +19,8 @@
                 <v-list-item><router-link :to="'/hospitalization'" class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-hospital-building</v-icon> Internari
                     </router-link></v-list-item>
-                <v-list-item v-if="role === 'DOCTOR'"><router-link :to="'/invoices'" class="router-link-path">
+                <v-list-item v-if="role === 'DOCTOR' || role === 'PATIENT'"><router-link :to="'/invoices'"
+                        class="router-link-path">
                         <v-icon style="margin-right: 5px; margin-bottom:5px;">mdi-receipt-text-edit</v-icon> Facturi
                     </router-link></v-list-item>
                 <v-list-item v-if="role === 'DOCTOR' || role === 'NURSE'"><router-link :to="'/people'"
