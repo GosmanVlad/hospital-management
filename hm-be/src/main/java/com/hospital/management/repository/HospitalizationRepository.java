@@ -31,4 +31,7 @@ public interface HospitalizationRepository extends JpaRepository<Hospitalization
 
     @Query(value = "SELECT * FROM hospitalization WHERE doctor_id = :doctorId AND (start_date, end_date) OVERLAPS (:startDate, :endDate)", nativeQuery = true)
     List<Hospitalization> findByEmployeeAndDateBetween(@Param("doctorId") Long doctorId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query(value = "SELECT * FROM hospitalization WHERE (start_date, end_date) OVERLAPS (:startDate, :endDate)", nativeQuery = true)
+    List<Hospitalization> findDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

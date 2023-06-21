@@ -32,4 +32,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     @Query(value = "SELECT * FROM appointments WHERE appointment_id = :appointmentId", nativeQuery = true)
     Appointment findByAppointmentId(@Param("appointmentId") Long appointmentId);
+
+    @Query(value = "SELECT * FROM appointments WHERE date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<Appointment> findDateBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

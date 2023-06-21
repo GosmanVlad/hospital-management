@@ -12,7 +12,8 @@ const apiUrl = process.env.VUE_APP_API_URL;
 export const raportService = {
     getInvoicesRaport,
     getCardsRaport,
-    getPieRaport
+    getPieRaport,
+    getPieRaportForNurse
 };
 
 function getInvoicesRaport(filters) {
@@ -43,4 +44,8 @@ function getPieRaport(filters) {
     };
 
     return axios.get(`${apiUrl}/raports/pie-raport`, { params: params }, { headers });
+}
+
+function getPieRaportForNurse() {
+    return axios.get(`${apiUrl}/raports/pie-raport-nurse`, { headers });
 }

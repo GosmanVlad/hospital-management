@@ -15,4 +15,6 @@ public interface RaportServiceUtil {
     CardRaportOutcomingDto getCardsRaportForPatient(RaportParams raportParams);
 
     PieRaportOutcomingDto getPieRaport(RaportParams raportParams);
+
+    PieRaportOutcomingDto getPieRaportForNurse();
 }

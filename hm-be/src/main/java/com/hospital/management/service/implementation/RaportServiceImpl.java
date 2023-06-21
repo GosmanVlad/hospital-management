@@ -141,4 +141,28 @@ public class RaportServiceImpl implements RaportServiceUtil {
         return pieRaportOutcomingDto;
     }
 
+    @Override
+    public PieRaportOutcomingDto getPieRaportForNurse() {
+        PieRaportOutcomingDto pieRaportOutcomingDto = new PieRaportOutcomingDto();
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Bucharest");
+        Calendar calendar = Calendar.getInstance(timeZone);
+        int year = calendar.get(Calendar.YEAR);
+
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMinimum(Calendar.DAY_OF_YEAR));
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
+        Date endDate = calendar.getTime();
+
+        List<Hospitalization> hospitalizations = hospitalizationRepository.findDateBetween(startDate, endDate);
+        List<Appointment> appointments = appointmentRepository.findDateBetween(startDate, endDate);
+
+        pieRaportOutcomingDto.setAppointments(appointments.size());
+        pieRaportOutcomingDto.setHospitalizations(hospitalizations.size());
+        return pieRaportOutcomingDto;
+    }
+
 }

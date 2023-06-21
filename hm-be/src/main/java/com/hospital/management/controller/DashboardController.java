@@ -95,4 +95,24 @@ public class DashboardController {
         }
     }
 
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = "application/json", schema =
+                    @Schema(implementation = PieRaportOutcomingDto.class))})})
+    @GetMapping("/pie-raport-nurse")
+    public ResponseEntity<?> getPieRaportNurse() {
+        Map<String, Object> responseMap;
+
+        try {
+            PieRaportOutcomingDto pieRaportOutcomingDto = raportService.getPieRaportForNurse();
+            responseMap = ResponseUtils.createResponseMap(false, "success_msg", pieRaportOutcomingDto);
+            return ResponseEntity.ok(responseMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseMap = ResponseUtils.createResponseMap(true, "error_msg", e.toString());
+            return ResponseEntity.internalServerError().body(responseMap);
+        }
+    }
+
 }

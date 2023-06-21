@@ -81,7 +81,7 @@
     <v-divider class="divider" />
     <h3 class="page-title">Grafice aplicat pe anul {{ currentYear() }}</h3>
     <v-row>
-        <v-col md='6'>
+        <v-col md='6' v-if="role === 'DOCTOR'">
             <div style="height: 600px; width: 700px">
                 <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
             </div>
@@ -166,15 +166,25 @@ export default {
         },
 
         getPieRaport() {
-            if (this.$store.getters.StateEmployeeId) {
-                this.filters = {
-                    doctorId: this.$store.getters.StateEmployeeId
+            if (this.$store.getters.StateRole !== 'NURSE') {
+                if (this.$store.getters.StateEmployeeId) {
+                    this.filters = {
+                        doctorId: this.$store.getters.StateEmployeeId
+                    }
                 }
+                raportService.getPieRaport(this.filters).then((res) => {
+                    this.pies.push(["Programari", res.data.result.appointments]);
+                    this.pies.push(["Internari", res.data.result.hospitalizations]);
+                })
+            } else {
+                raportService.getPieRaportForNurse().then((res) => {
+                    this.pies.push(["Programari", res.data.result.appointments]);
+                    this.pies.push(["Internari", res.data.result.hospitalizations]);
+
+                    this.cards.appointments = res.data.result.appointments;
+                    this.cards.hospitalizations = res.data.result.hospitalizations;
+                })
             }
-            raportService.getPieRaport(this.filters).then((res) => {
-                this.pies.push(["Programari", res.data.result.appointments]);
-                this.pies.push(["Internari", res.data.result.hospitalizations]);
-            })
         },
 
         currentYear() {
