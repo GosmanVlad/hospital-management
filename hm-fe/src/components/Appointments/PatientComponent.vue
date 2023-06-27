@@ -49,11 +49,11 @@
                                 <v-select :items="this.departments" item-title="departmentName" item-value="departmentId"
                                     variant="underlined" v-model="this.saveAppointmentBody.selectedDepartment"
                                     ref="department" placeholder="Sectie" label="Selecteaza sectie"
-                                    @update:modelValue="getEmployeeByDepartmentId()">
+                                    @update:modelValue="getDoctorsByDepartmentId()">
                                 </v-select>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete :items="this.doctors"
+                                <v-autocomplete :items="this.doctorsByDepartment"
                                     :item-title="(value) => value.user.firstName + ' ' + value.user.lastName"
                                     item-value="employeeId" single-line variant="underlined" append-inner-icon="mdi-magnify"
                                     v-model="this.saveAppointmentBody.selectedEmployee" label="Selecteaza doctor"
@@ -186,7 +186,8 @@ export default {
         departments: [],
         employees: [],
         statuses: appointmentStatus,
-        doctors: []
+        doctors: [],
+        doctorsByDepartment: []
     }),
     mounted() {
         this.getAppointments();
@@ -328,6 +329,13 @@ export default {
             employeeService.getDoctors().then((res) => {
                 this.doctors = res.data.result;
             })
+        },
+        getDoctorsByDepartmentId() {
+            if (this.saveAppointmentBody.selectedDepartment) {
+                employeeService.getEmployeeByDepartmentId(this.saveAppointmentBody.selectedDepartment).then((res) => {
+                    this.doctorsByDepartment = res.data.result;
+                })
+            }
         },
         resetFilters() {
             this.filters = {

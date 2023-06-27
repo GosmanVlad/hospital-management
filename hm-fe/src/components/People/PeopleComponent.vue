@@ -242,6 +242,10 @@ export default {
         this.loadStaff();
         this.loadDoctorsNomenclature();
         this.loadPatientNomenclature();
+
+        if (this.$store.getters.StateRole === 'NURSE') {
+            this.tab = 'two';
+        }
     },
     computed: {
         storeRole: function () {
