@@ -92,31 +92,35 @@ public class UserServiceImpl implements UserServiceUtil {
 
             List<PeopleCsvLayout> result = readFile(file);
             for (PeopleCsvLayout row : result) {
-                User user = new User();
+                try {
+                    User user = new User();
 
-                user.setFirstName(row.getFirstName());
-                user.setLastName(row.getLastName());
-                user.setEmail(row.getEmail());
-                user.setPhone(row.getPhone());
-                user.setBirthdate(row.getBirthDate());
-                user.setCountry(row.getCountry());
-                user.setCity(row.getCity());
-                user.setHomeAddress(row.getHomeAddress());
-                user.setPersonalNumber(row.getPersonalNumber());
-                user.setRole(row.getRole());
-                user.setCreatedDate(new Date());
-                user.setActivated(false);
-                user.setUsername(row.getFirstName() + " " + row.getLastName());
-                user.setPassword(new BCryptPasswordEncoder().encode("gsmvlad"));
-                userRepository.save(user);
+                    user.setFirstName(row.getFirstName());
+                    user.setLastName(row.getLastName());
+                    user.setEmail(row.getEmail());
+                    user.setPhone(row.getPhone());
+                    user.setBirthdate(row.getBirthDate());
+                    user.setCountry(row.getCountry());
+                    user.setCity(row.getCity());
+                    user.setHomeAddress(row.getHomeAddress());
+                    user.setPersonalNumber(row.getPersonalNumber());
+                    user.setRole(row.getRole());
+                    user.setCreatedDate(new Date());
+                    user.setActivated(false);
+                    user.setUsername(row.getFirstName() + " " + row.getLastName());
+                    user.setPassword(new BCryptPasswordEncoder().encode("gsmvlad"));
+                    userRepository.save(user);
 
-                if (!row.getRole().equals("PATIENT")) {
-                    Employee employee = new Employee();
-                    Department department = departmentRepository.findByDepartmentName(row.getDepartmentName());
+                    if (!row.getRole().equals("PATIENT")) {
+                        Employee employee = new Employee();
+                        Department department = departmentRepository.findByDepartmentName(row.getDepartmentName());
 
-                    employee.setUser(user);
-                    employee.setDepartment(department);
-                    employeeRepository.save(employee);
+                        employee.setUser(user);
+                        employee.setDepartment(department);
+                        employeeRepository.save(employee);
+                    }
+                }catch(Exception exception) {
+                    exception.printStackTrace();
                 }
             }
         }catch (Exception exception) {

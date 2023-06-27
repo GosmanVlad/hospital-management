@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+<head>
+  <meta charset="ISO-8859-1" />
+  <title>Institutul de spitalizare</title>
+  <style th:inline="text">
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      th {
+        background-color: #dcdcdc;
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      td {
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Tahoma, sans-serif;
+      }
+
+      .column {
+        float: left;
+        width: 33.3%;
+        padding: 0 10px;
+      }
+
+      p {
+        margin: 0 !important;
+      }
+
+      /* Remove extra left and right margins, due to padding */
+      .row {
+        margin: 0 -5px;
+      }
+
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      /* Responsive columns */
+      @media screen and (max-width: 600px) {
+        .column {
+          width: 100%;
+          display: block;
+          margin-bottom: 60px;
+        }
+      }
+
+      /* Style the counter cards */
+      .card {
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+        padding: 0px;
+        text-align: left;
+        background-color: #ffffff;
+      }
+
+      .b {
+        text-align: justify;
+      }
+
+      /* Style inform text */
+      .inf {
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+        color: #a9a9a9;
+      }
+
+      /* Style after inform text */
+      .extrainf {
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+        font-weight: bold;
+        color: #000000;
+      }
+
+      .table-non-border,
+      .table-non-border td {
+        border-style: dotted;
+        width: 100%;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      .image {
+        width: 100%;
+      }
+
+      .center-block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .paragraph {
+            font-size: 20px;
+            font-family: Tahoma, sans-serif;
+            color: #000000;
+            text-align: center;
+        }
+
+        .details-paragraph {
+            font-size: 15px;
+            font-family: Tahoma, sans-serif;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body>
+<div class="center-block">
+  <h1 class="paragraph center-block">Institutul de spitalizare</h1>
+  <hr/>
+  <p class="paragraph center-block" th:text="'Se confirma internarea cu numarul ' + ${hospitalizationId} + ', introdusa in ' + ${date} + ' pentru pacientul ' + ${patient} + '.'"></p>
+  <br/><br/>
+  <div class="details-paragraph">
+    <p th:text="'Data internarii: ' + ${startDate}"></p>
+    <p th:text="'Data externare: ' + ${endDate}"></p>
+    <p th:text="'Medicul: ' + ${doctor}"></p>
+    <p th:text="'Diagnostic: ' + ${diagnosis}"></p>
+  </div>
+</div>
+</body>
+</html>

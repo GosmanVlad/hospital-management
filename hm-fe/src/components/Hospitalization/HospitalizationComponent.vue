@@ -209,6 +209,15 @@ export default {
                     color: snackbarColors.success,
                     message: "Internarea efectuata cu succes!",
                 }
+            }).catch((error) => {
+                if (error.response.data.result === 'no_more_seats') {
+                    this.snackbar = {
+                        show: true,
+                        status: "error",
+                        color: snackbarColors.error,
+                        message: "In acest salon nu mai sunt locuri libere!",
+                    }
+                }
             })
         },
         loadAllPatients() {

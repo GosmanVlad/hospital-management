@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+<head>
+    <meta charset="ISO-8859-1" />
+    <title>Institutul de spitalizare</title>
+    <style th:inline="text">
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      th {
+        background-color: #dcdcdc;
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      td {
+        font-size: 9px;
+        font-family: Tahoma, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Tahoma, sans-serif;
+      }
+
+      .column {
+        float: left;
+        width: 33.3%;
+        padding: 0 10px;
+      }
+
+      p {
+        margin: 0 !important;
+      }
+
+      .row {
+        margin: 0 -5px;
+      }
+
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      @media screen and (max-width: 600px) {
+        .column {
+          width: 100%;
+          display: block;
+          margin-bottom: 60px;
+        }
+      }
+
+      .card {
+        font-family: Tahoma, sans-serif;
+        padding: 0px;
+        text-align: left;
+        background-color: #ffffff;
+      }
+
+      .b {
+        text-align: justify;
+      }
+
+      .table-non-border,
+      .table-non-border td {
+        border-style: dotted;
+        width: 100%;
+      }
+
+      .center-block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .paragraph {
+            font-size: 20px;
+            font-family: Tahoma, sans-serif;
+            color: #000000;
+            text-align: center;
+        }
+
+        .details-paragraph {
+            font-size: 15px;
+            font-family: Tahoma, sans-serif;
+            color: #000000;
+        }
+
+        .recommandations {
+            font-size: 13px;
+            font-family: Tahoma, sans-serif
+        }
+    </style>
+</head>
+
+<body>
+<div class="center-block">
+<h1 class="paragraph center-block">Institutul de spitalizare</h1>
+<hr/>
+<p class="paragraph center-block" th:text="'Se confirma internarea cu numarul ' + ${hospitalizationId} + ', introdusa in ' + ${date} + ' pentru pacientul ' + ${patient} + '.'"></p>
+<br/><br/>
+
+    <div class="details-paragraph">
+        <div class="center-block">
+            <div class="row">
+                <div class="column">
+                        <h2>Detalii internare</h2>
+                        <p th:text="'Data internarii: ' + ${startDate}"></p>
+                        <p th:text="'Data externare: ' + ${endDate}"></p>
+                        <p th:text="'Medicul: ' + ${doctor}"></p>
+                        <p th:text="'Diagnostic: ' + ${diagnosis}"></p>
+                        </div>
+                <div class="column">
+                        <h2>Detalii pacient</h2>
+                        <p th:text="'CNP: ' + ${cnp}"></p>
+                        <p th:text="'Data de nastere: ' + ${birthDate}"></p>
+                        <p th:text="'Numar de telefon: ' + ${phone}"></p>
+                        <p th:text="'Tara: ' + ${country}"></p>
+                        <p th:text="'Oras: ' + ${city}"></p>
+                        <p th:text="'Adresa: ' + ${address}"></p>
+                        </div>
+                <div class="column">
+                    <h2>Detalii Doctor</h2>
+                    <p th:text="'Nume: ' + ${doctor}"></p>
+                    <p th:text="'Numar de telefon: ' + ${doctorPhone}"></p>
+                    <p th:text="'Sectie: ' + ${department}"></p>
+                </div>
+                </div></div>
+</div> <br/>
+    <hr/>
+<div class="recommandations">
+    <p>- Verifica concordanta datelor personale ale pacientului si a datei de planificare a internarii acestuia</p>
+    <p>- Dupa ce v-ati cazat, bagajul (valiza) va fi preluat de apartinatori, sau va fi depozitat pe sectie, în spatiul special amenajat.</p>
+    <p>- Pacientul va fi asistat pe toata perioada internarii de catre personal medical oriunde este nevoie sa fie transferat.</p>
+    <p>- Pentru pastrarea unei atmosfere cât mai adecvate, este necesar pe cât posibil sa pastram linistea în saloane si pe sectie.</p>
+</div>
+</div>
+
+</body>
+</html>

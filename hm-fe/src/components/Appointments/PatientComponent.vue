@@ -119,6 +119,11 @@
                             <v-tooltip activator="parent" location="top">Anuleaza programarea</v-tooltip>
                             <v-icon>mdi-cancel</v-icon>
                         </span>
+                        <span class="group pa-2 cursor" @click="generatePdf(item.appointmentId)"
+                            v-if="item.status === 'accepted'">
+                            <v-tooltip activator="parent" location="top">Descarca programarea</v-tooltip>
+                            <v-icon>mdi-file-cabinet</v-icon>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -141,7 +146,7 @@
     </v-snackbar>
 </template>
 <script>
-import { appointmentService } from '@/api';
+import { appointmentService, fileService } from '@/api';
 import { departmentService } from '@/api';
 import { employeeService } from '@/api';
 import { appointmentStatus } from "@/consts/statuses";
@@ -332,7 +337,16 @@ export default {
                 status: ""
             }
             this.getAppointments();
-        }
+        },
+        downloadFile(filePath) {
+            fileService.download(filePath);
+        },
+        generatePdf(appointmentId) {
+            appointmentService.generatePdf(appointmentId).then((res) => this.downloadFile(res.data.result));
+        },
+        exportExcel() {
+            appointmentService.exportExcel(this.filters);
+        },
     }
 }
 </script>

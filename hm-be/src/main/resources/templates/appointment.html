@@ -132,13 +132,12 @@
 <div class="center-block">
   <h1 class="paragraph center-block">Institutul de spitalizare</h1>
   <hr/>
-  <p class="paragraph center-block" th:text="'Se confirma internarea cu numarul ' + ${hospitalizationId} + ', introdusa in ' + ${date} + ' pentru pacientul ' + ${patient} + '.'"></p>
+  <p class="paragraph center-block" th:text="'Se confirma programarea cu numarul ' + ${appointmentId} + ', introdusa in ' + ${date} + ' pentru pacientul ' + ${patient} + '.'"></p>
   <br/><br/>
   <div class="details-paragraph">
-    <p th:text="'Data internarii: ' + ${startDate}"></p>
-    <p th:text="'Data externare: ' + ${endDate}"></p>
+    <p th:text="'Data programare: ' + ${date}"></p>
     <p th:text="'Medicul: ' + ${doctor}"></p>
-    <p th:text="'Diagnostic: ' + ${diagnosis}"></p>
+    <p th:text="'Detalii: ' + ${details}"></p>
   </div>
 </div>
 </body>

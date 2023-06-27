@@ -18,8 +18,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
     @Query(value = "UPDATE appointments SET status = :status WHERE appointment_id = :appointmentId", nativeQuery = true)
     void changeAppointmentStatus(@Param("appointmentId") Long appointmentId, @Param("status") String status);
 
-    @Query(value = "SELECT * FROM appointments WHERE date = :date", nativeQuery = true)
-    Appointment findByDate(@Param("date") LocalDateTime date);
+    @Query(value = "SELECT * FROM appointments WHERE date BETWEEN :date AND :dateMargin AND status != 'declined' AND status != 'canceled' AND employee_id = :employeeId", nativeQuery = true)
+    Appointment findByDate(@Param("date") LocalDateTime date, @Param("dateMargin") LocalDateTime dateMargin, @Param("employeeId") Long employeeId);
 
     @Query(value = "SELECT * FROM appointments WHERE employee_id = :doctorId", nativeQuery = true)
     List<Appointment> findByDoctorId(@Param("doctorId") Long doctorId);

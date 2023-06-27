@@ -1,0 +1,62 @@
+.content {
+  height: 100%;
+  background-attachment: fixed;
+  margin: 0;
+}
+
+.page-title {
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 27px;
+  color: #9d152d;
+  margin-bottom: 40px;
+}
+
+.page-content {
+  max-width: 95% !important;
+  margin-top: 48px;
+  width: 100%;
+  padding: 16px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.v-toolbar__content,
+.v-toolbar__extension {
+  background-color: #9d152d;
+}
+
+.v-navigation-drawer__content {
+  background-color: #f1eded;
+}
+
+.router-link-path:hover {
+  color: #777777;
+}
+
+.navigation-drawer-main {
+  top: 40px !important;
+}
+
+.header-title {
+  font-size: 25px;
+  color: white;
+}
+
+.login-form {
+  background-color: white;
+  border: 4px solid #9d152d;
+  width: 450px;
+  position: relative;
+  top: 0%;
+  border-radius: 5px;
+  padding-top: 50px;
+}
+
+.auth-title {
+  color: #9d152d;
+}
+
+.v-field__field {
+  background-color: white !important;
+}

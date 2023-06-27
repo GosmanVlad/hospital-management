@@ -81,8 +81,8 @@
     <v-divider class="divider" />
     <h3 class="page-title">Grafice aplicat pe anul {{ currentYear() }}</h3>
     <v-row>
-        <v-col md='6' v-if="role === 'DOCTOR'">
-            <div style="height: 600px; width: 700px">
+        <v-col md='6' v-if="role === 'DOCTOR' || role === 'PATIENT'">
+            <div style="height: 600px; width: 600px">
                 <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
             </div>
         </v-col>

@@ -72,7 +72,7 @@ public class RaportServiceImpl implements RaportServiceUtil {
                         unpaidInvoice = unpaidInvoice + invoiceItem.getBrutCost();
                     }
 
-                    if(invoice.getStatus().equals("pending")) {
+                    if(invoice.getStatus().equals("canceled")) {
                         pendingInvoice = pendingInvoice + invoiceItem.getBrutCost();
                     }
                 }
